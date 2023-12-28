@@ -38,59 +38,64 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  const Text(
-                    'Forget Password',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  CircleAvatar(
-                    radius: 100,
-                    child: Image.asset('assets/images/e_commerce_logo.png'),
-                  ),
-                  CustomTextField(
-                    textEditingController: emailController,
-                    prefixIcon: Icons.email_outlined,
-                    hintText: 'Enter Email',
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
-                      }
-                      return null;
-                    },
-                  ),
-                  _isLoading
-                      ? const CircularProgressIndicator()
-                      : CustomButton(
-                          title: _isLoading
-                              ? 'Sending Request...'
-                              : 'Send Request',
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              String email = emailController.text.trim();
-                              resetPassword(context, email);
+      body: _isLoading == false
+          ? Center(
+              child: AppUtils.customProgressIndicator(),
+            )
+          : SafeArea(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Text(
+                          'Forget Password',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        CircleAvatar(
+                          radius: 100,
+                          child:
+                              Image.asset('assets/images/e_commerce_logo.png'),
+                        ),
+                        CustomTextField(
+                          textEditingController: emailController,
+                          prefixIcon: Icons.email_outlined,
+                          hintText: 'Enter Email',
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your email';
                             }
+                            return null;
                           },
                         ),
-                ],
+                        _isLoading
+                            ? const CircularProgressIndicator()
+                            : CustomButton(
+                                title: _isLoading
+                                    ? 'Sending Request...'
+                                    : 'Send Request',
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    String email = emailController.text.trim();
+                                    resetPassword(context, email);
+                                  }
+                                },
+                              ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }
