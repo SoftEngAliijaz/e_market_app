@@ -1,5 +1,3 @@
-Certainly! Below is a basic template for a README.md file. You can customize and expand it based on your specific project details.
-
 ```markdown
 # E-Market App
 
