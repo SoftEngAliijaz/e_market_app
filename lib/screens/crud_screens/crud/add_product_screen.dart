@@ -1,14 +1,14 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_market_app/models/product_model/product_model.dart';
+import 'package:e_market_app/screens/home/home_screen.dart';
+import 'package:e_market_app/widgets/custom_button.dart';
+import 'package:e_market_app/widgets/custom_text_field.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shopbiz_app/screens/home/home_screen.dart';
-import 'package:shopbiz_app/widgets/custom_button.dart';
-import 'package:shopbiz_app/widgets/custom_text_field.dart';
-import 'package:shopbiz_app/models/product_model/product_model.dart';
 
 class AddProductScreen extends StatefulWidget {
   final String? getId;

@@ -2,33 +2,34 @@ class UserModel {
   final String uid;
   final String email;
   final String displayName;
-  final String?
-      photoURL; // It's optional in case the UserModel doesn't have a photo.
+  final String? photoUrl; // Updated from photoURL
+  final String? userType;
 
   UserModel({
     required this.uid,
     required this.email,
     required this.displayName,
-    this.photoURL,
+    this.photoUrl,
+    this.userType,
   });
 
-  // Create a method to convert the UserModel object to a map for Firestore.
   Map<String, dynamic> toMap() {
     return {
       'uid': uid,
       'email': email,
       'displayName': displayName,
-      'photoURL': photoURL,
+      'photoUrl': photoUrl, // Updated from photoURL
+      'userType': userType,
     };
   }
 
-  // Create a factory method to create a UserModel object from Firestore data.
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       uid: map['uid'],
       email: map['email'],
       displayName: map['displayName'],
-      photoURL: map['photoURL'],
+      photoUrl: map['photoUrl'], // Updated from photoURL
+      userType: map['userType'],
     );
   }
 }

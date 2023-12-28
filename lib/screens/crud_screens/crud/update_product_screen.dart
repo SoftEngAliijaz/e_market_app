@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_market_app/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shopbiz_app/constants/constants.dart';
 
 class UpdateProductScreen extends StatelessWidget {
   const UpdateProductScreen({Key? key}) : super(key: key);

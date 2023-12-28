@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "556521691788",
+    "project_id": "e-market-app-1fb06",
+    "storage_bucket": "e-market-app-1fb06.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:556521691788:android:76be9995e25d6b66c479a9",
+        "android_client_info": {
+          "package_name": "com.example.e_market_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "556521691788-15tlnl5rj2s34seo1cmu9hkfvk5cg9k5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.e_market_app",
+            "certificate_hash": "3578b9a32f7f9a08a29d5513c190a73bf63f081e"
+          }
+        },
+        {
+          "client_id": "556521691788-u5dfm5leqmkbffdg9h01qpe5qd33kuql.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZbxcWxbAgzUPfcGFyPu9F3tHUs_SGA3Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "556521691788-u5dfm5leqmkbffdg9h01qpe5qd33kuql.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

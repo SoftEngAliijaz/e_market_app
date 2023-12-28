@@ -1,10 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_market_app/models/user_model/user_model.dart';
+import 'package:e_market_app/screens/credientals/login_screen.dart';
+import 'package:e_market_app/widgets/account_selection.dart';
+import 'package:e_market_app/widgets/custom_button.dart';
+import 'package:e_market_app/widgets/custom_text_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:shopbiz_app/models/auth_model/user_model.dart';
-import 'package:shopbiz_app/screens/credientals/login_screen.dart';
-import 'package:shopbiz_app/widgets/account_selection.dart';
-import 'package:shopbiz_app/widgets/custom_button.dart';
-import 'package:shopbiz_app/widgets/custom_text_field.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);

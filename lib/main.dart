@@ -1,39 +1,45 @@
 import 'package:e_market_app/screens/user_screens/user_activity_cycle.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
+// Main function to run the app
 void main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // MaterialApp widget, which configures the overall theme and navigation
     return MaterialApp(
-      ///title
+      // App title
       title: 'E-Market',
 
-      ///debugShowCheckedModeBanner
+      // Disable the debug banner in the top-right corner
       debugShowCheckedModeBanner: false,
 
-      ///theme
+      // Define the theme for the entire app
       theme: ThemeData(
-        ///colorScheme
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        // Color scheme for the app
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.deepPurple,
+        ).copyWith(secondary: Colors.deepOrange),
 
-        ///cardTheme
+        // Define the default card theme
         cardTheme: const CardTheme(color: Colors.white),
 
-        ///primaryColor
+        // Set the primary color for the app
         primaryColor: Colors.deepPurple,
 
-        ///fontFamily
-        fontFamily: 'roboto',
+        // Apply Google Fonts to the text theme
+        textTheme: GoogleFonts.firaSansTextTheme(Theme.of(context).textTheme),
 
-        ///app bar theme
+        // App bar theme configuration
         appBarTheme: const AppBarTheme(
           iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: Colors.deepPurple,
@@ -43,11 +49,11 @@ class MyApp extends StatelessWidget {
           ),
         ),
 
-        ///useMaterial3
+        // Enable Material 3 design features
         useMaterial3: true,
       ),
 
-      ///home initial screen
+      // Set the initial screen of the app to UserActivityCycleScreen
       home: const UserActivityCycleScreen(),
     );
   }

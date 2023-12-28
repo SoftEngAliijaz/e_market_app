@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:e_market_app/models/product_model/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:shopbiz_app/models/product_model/product_model.dart';
 
 class ProductFavScreen extends StatelessWidget {
   const ProductFavScreen({Key? key}) : super(key: key);

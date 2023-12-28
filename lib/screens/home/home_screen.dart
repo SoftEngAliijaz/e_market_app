@@ -1,14 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_market_app/components/carousel_slider_component.dart';
+import 'package:e_market_app/components/drawer_component.dart';
+import 'package:e_market_app/constants/constants.dart';
+import 'package:e_market_app/models/ui_models/grid_view_model.dart';
+import 'package:e_market_app/screens/crud_screens/product_screens/product_cart_screen.dart';
+import 'package:e_market_app/screens/crud_screens/product_screens/product_fav_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:shopbiz_app/components/carousel_slider_component.dart';
-import 'package:shopbiz_app/components/drawer_component.dart';
-import 'package:shopbiz_app/constants/constants.dart';
-import 'package:shopbiz_app/models/ui_models/grid_view_model.dart';
-import 'package:shopbiz_app/screens/crud_screens/product_screens/product_cart_screen.dart';
-import 'package:shopbiz_app/screens/crud_screens/product_screens/product_fav_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -38,7 +38,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      drawer: Components.drawerComponent(context),
+      drawer: drawerComponent(context),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

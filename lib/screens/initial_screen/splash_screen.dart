@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:e_market_app/constants/constants.dart';
+import 'package:e_market_app/screens/initial_screen/user_way_entry_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:shopbiz_app/constants/constants.dart';
-import 'package:shopbiz_app/screens/initial_screen/user_way_entry_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);

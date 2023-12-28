@@ -1,8 +1,8 @@
+import 'package:e_market_app/constants/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shopbiz_app/constants/constants.dart';
-import 'package:shopbiz_app/screens/credientals/login_screen.dart';
-import 'package:shopbiz_app/screens/home/home_screen.dart';
+import 'package:e_market_app/screens/credientals/login_screen.dart';
+import 'package:e_market_app/screens/home/home_screen.dart';
 
 class UserActivityCycleScreen extends StatelessWidget {
   const UserActivityCycleScreen({Key? key}) : super(key: key);
