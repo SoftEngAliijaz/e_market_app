@@ -1,4 +1,4 @@
-import 'package:e_market_app/screens/user_screens/user_activity_cycle.dart';
+import 'package:e_market_app/user_activity_cycle/user_activity_cycle.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,11 +25,6 @@ class MyApp extends StatelessWidget {
 
       // Define the theme for the entire app
       theme: ThemeData(
-        // Color scheme for the app
-        colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: Colors.deepPurple,
-        ).copyWith(secondary: Colors.deepOrange),
-
         // Define the default card theme
         cardTheme: const CardTheme(color: Colors.white),
 

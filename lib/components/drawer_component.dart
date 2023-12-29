@@ -1,10 +1,12 @@
-import 'package:e_market_app/screens/crud_screens/crud/add_product_screen.dart';
-import 'package:e_market_app/screens/crud_screens/crud/delete_product_screen.dart';
-import 'package:e_market_app/screens/crud_screens/crud/update_product_screen.dart';
-import 'package:e_market_app/screens/crud_screens/crud/view_product_screen.dart';
-import 'package:e_market_app/screens/crud_screens/product_screens/product_cart_screen.dart';
-import 'package:e_market_app/screens/crud_screens/product_screens/product_fav_screen.dart';
-import 'package:e_market_app/screens/user_screens/profile_screen.dart';
+import 'package:e_market_app/admin/crud_screens/crud/add_product_screen.dart';
+import 'package:e_market_app/admin/crud_screens/crud/delete_product_screen.dart';
+import 'package:e_market_app/admin/crud_screens/crud/update_product_screen.dart';
+import 'package:e_market_app/admin/crud_screens/crud/view_product_screen.dart';
+import 'package:e_market_app/admin/crud_screens/product_screens/product_cart_screen.dart';
+import 'package:e_market_app/admin/crud_screens/product_screens/product_fav_screen.dart';
+import 'package:e_market_app/credientals/login_screen.dart';
+import 'package:e_market_app/user_side/user_profile_screens/user_profile_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 ///firebase auth instance
@@ -89,11 +91,10 @@ Drawer drawerComponent(BuildContext context) {
 
         // Sign out user and navigate to the LogInScreen
         _listTileComponent(context, () async {
-          // await FirebaseAuth.instance.signOut();
-          // Navigator.pushAndRemoveUntil(context,
-          //     MaterialPageRoute(builder: (_) {
-          //   return const LogInScreen();
-          // }), (route) => false);
+          await FirebaseAuth.instance.signOut();
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) {
+            return const LogInScreen();
+          }), (route) => false);
         }, Icons.logout, 'LogOut'),
       ],
     ),

@@ -4,6 +4,7 @@ class UserModel {
   final String displayName;
   final String? photoUrl; // Updated from photoURL
   final String? userType;
+  final bool? isAdmin;
 
   UserModel({
     required this.uid,
@@ -11,6 +12,7 @@ class UserModel {
     required this.displayName,
     this.photoUrl,
     this.userType,
+    this.isAdmin,
   });
 
   Map<String, dynamic> toMap() {
@@ -20,6 +22,7 @@ class UserModel {
       'displayName': displayName,
       'photoUrl': photoUrl, // Updated from photoURL
       'userType': userType,
+      'isAdmin': isAdmin,
     };
   }
 
@@ -28,8 +31,9 @@ class UserModel {
       uid: map['uid'],
       email: map['email'],
       displayName: map['displayName'],
-      photoUrl: map['photoUrl'], // Updated from photoURL
+      photoUrl: map['photoUrl'],
       userType: map['userType'],
+      isAdmin: map['isAdmin'] ?? false,
     );
   }
 }

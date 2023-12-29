@@ -2,8 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:e_market_app/constants/constants.dart';
-import 'package:e_market_app/screens/credientals/login_screen.dart';
-import 'package:e_market_app/widgets/custom_button.dart';
+import 'package:e_market_app/credientals/login_screen.dart';
 import 'package:e_market_app/widgets/custom_text_field.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
@@ -79,10 +78,12 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                         ),
                         _isLoading
                             ? const CircularProgressIndicator()
-                            : CustomButton(
-                                title: _isLoading
-                                    ? 'Sending Request...'
-                                    : 'Send Request',
+                            : ElevatedButton(
+                                child: Text(
+                                  _isLoading
+                                      ? 'Sending Request...'
+                                      : 'Send Request',
+                                ),
                                 onPressed: () {
                                   if (_formKey.currentState!.validate()) {
                                     String email = emailController.text.trim();

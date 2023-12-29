@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/models/product_model/product_model.dart';
-import 'package:e_market_app/screens/home/home_screen.dart';
-import 'package:e_market_app/widgets/custom_button.dart';
+import 'package:e_market_app/user_side/home/home_screen.dart';
 import 'package:e_market_app/widgets/custom_text_field.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -159,8 +159,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 ),
                         ),
                         sizedbox(),
-                        CustomButton(
-                          title: 'Add Product',
+                        ElevatedButton(
+                          child: Text('Add Product'),
                           onPressed: () async {
                             await addProducts();
                           },

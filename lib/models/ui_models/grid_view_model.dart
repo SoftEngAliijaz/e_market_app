@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:e_market_app/screens/crud_screens/crud/add_product_screen.dart';
-import 'package:e_market_app/screens/crud_screens/crud/delete_product_screen.dart';
-import 'package:e_market_app/screens/crud_screens/crud/update_product_screen.dart';
-import 'package:e_market_app/screens/crud_screens/crud/view_product_screen.dart';
+import 'package:e_market_app/admin/crud_screens/crud/add_product_screen.dart';
+import 'package:e_market_app/admin/crud_screens/crud/delete_product_screen.dart';
+import 'package:e_market_app/admin/crud_screens/crud/update_product_screen.dart';
+import 'package:e_market_app/admin/crud_screens/crud/view_product_screen.dart';
 
 class GridViewModel {
   ///var

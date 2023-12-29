@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/constants/constants.dart';
 import 'package:e_market_app/models/product_model/product_model.dart';
-import 'package:e_market_app/screens/crud_screens/product_screens/product_detail_screens.dart';
+import 'package:e_market_app/admin/crud_screens/product_screens/product_detail_screens.dart';
 import 'package:flutter/material.dart';
 
 class ViewProductScreen extends StatelessWidget {
