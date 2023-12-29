@@ -13,7 +13,7 @@ class AdminDashBoard extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
       ),
-      drawer: AdminDashBoardDrawer(),
+      drawer: const AdminDashBoardDrawer(),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('admins')
@@ -21,15 +21,12 @@ class AdminDashBoard extends StatelessWidget {
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
+            return Center(child: Text('Error: ${snapshot.error}'));
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: const CircularProgressIndicator(), // Loading indicator
-            );
+            // Loading indicator
+            return const Center(child: CircularProgressIndicator());
           }
 
           // If there is no data, display a message
@@ -46,17 +43,14 @@ class AdminDashBoard extends StatelessWidget {
             Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
             // Customize this part based on your data structure
-            return Card(
-              elevation: 2.0,
-              child: ListTile(
-                title: Text(data['displayName'] ?? ''),
-                subtitle: Text(data['email'] ?? ''),
-              ),
+            return ListTile(
+              leading: const Icon(Icons.admin_panel_settings_outlined),
+              title: Text("Welcome: ${data['displayName'] ?? ''}"),
+              subtitle: Text("Email: ${data['email'] ?? ''}"),
             );
           }).toList();
 
           return ListView(
-            padding: const EdgeInsets.all(16.0),
             children: [
               ...adminWidgets,
               _buildCarouselDividerAndGrid(),

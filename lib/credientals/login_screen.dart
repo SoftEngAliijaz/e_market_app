@@ -1,8 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_market_app/constants/constants.dart';
-import 'package:e_market_app/models/user_model/user_model.dart';
-import 'package:e_market_app/credientals/signup_screen.dart';
 import 'package:e_market_app/admin/dashboard/admin_dashboard_screen.dart';
+import 'package:e_market_app/constants/constants.dart';
+import 'package:e_market_app/credientals/signup_screen.dart';
+import 'package:e_market_app/models/user_model/user_model.dart';
 import 'package:e_market_app/user_side/home/home_screen.dart';
 import 'package:e_market_app/widgets/account_selection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -45,30 +47,15 @@ class _LogInScreenState extends State<LogInScreen> {
             UserModel userModel = UserModel.fromMap(
               userSnapshot.data() as Map<String, dynamic>,
             );
-            if (userModel.isAdmin != null) {
-              print('isAdmin: ${userModel.isAdmin}');
-              if (userModel.isAdmin!) {
-                // Admin login
-                print('Navigating to AdminDashBoard');
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (_) {
-                  return const AdminDashBoard(); // Navigate to admin dashboard
-                }));
-              } else {
-                // Regular user login
-                print('Navigating to HomeScreen');
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (_) {
-                  return const HomeScreen(); // Navigate to home screen
-                }));
-              }
+
+            if (userModel.isAdmin!) {
+              // Navigate to admin dashboard
+              navigateTo(context, AdminDashBoard());
             } else {
-              // Handle case where isAdmin field is not present
-              print('isAdmin field is not present');
-              Fluttertoast.showToast(msg: 'User data is incomplete');
+              // Navigate to home screen
+              navigateTo(context, HomeScreen());
             }
           } else {
-            // Handle case where user data does not exist
             Fluttertoast.showToast(msg: 'User data does not exist');
           }
         }

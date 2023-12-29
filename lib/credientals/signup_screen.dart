@@ -1,4 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/admin/dashboard/admin_dashboard_screen.dart';
 import 'package:e_market_app/constants/constants.dart';
@@ -140,9 +139,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                             CircleAvatar(
                               radius: 100,
-                              child: Image.asset(
-                                'assets/images/e_commerce_logo.png',
-                              ),
+                              backgroundImage: AssetImage(
+                                  'assets/images/e_commerce_logo.png'),
                             ),
                             CustomTextField(
                               textEditingController: _nameC,
@@ -291,70 +289,3 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 }
- // _signUpCredentials() async {
-  //   if (_formKey.currentState!.validate()) {
-  //     if (_passwordC.text != _rePassC.text) {
-  //       // Passwords do not match
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(
-  //           content: Text("Passwords do not match!"),
-  //         ),
-  //       );
-  //       return;
-  //     }
-
-  //     setState(() {
-  //       _isLoading = true;
-  //     });
-
-  //     try {
-  //       // Use Firebase Authentication for sign-up
-  //       UserCredential userCredential =
-  //           await FirebaseAuth.instance.createUserWithEmailAndPassword(
-  //         email: _emailC.text,
-  //         password: _passwordC.text,
-  //       );
-
-  //       // Additional logic for user sign-up
-  //       await FirebaseFirestore.instance
-  //           .collection(_selectedUserType == 'admin'
-  //               ? 'admins'
-  //               : 'users') // Use 'admins' collection for admins and 'users' collection for regular users
-  //           .doc(userCredential.user!.uid)
-  //           .set({
-  //         'uid': userCredential.user!.uid,
-  //         'displayName': _nameC.text,
-  //         'email': _emailC.text,
-  //         'photoUrl': userCredential.user!.photoURL,
-  //         'userType': _selectedUserType,
-  //         'isAdmin': _selectedUserType == 'admin',
-  //       });
-
-  //       // Show success message
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(
-  //           content: Text("Sign-up successful!"),
-  //         ),
-  //       );
-
-  //       ///setting route for user and admin after signup
-  //       ///directly to their desired screens
-  //       _selectedUserType == 'user'
-  //           ? navigateTo(context, HomeScreen())
-  //           : navigateTo(context, const AdminDashBoard());
-
-  //       ///FirebaseAuthException
-  //     } on FirebaseAuthException catch (e) {
-  //       // Handle sign-up errors
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(
-  //           content: Text("Error: ${e.message}"),
-  //         ),
-  //       );
-  //     } finally {
-  //       setState(() {
-  //         _isLoading = false;
-  //       });
-  //     }
-  //   }
-  // }
