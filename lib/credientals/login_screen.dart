@@ -24,8 +24,9 @@ class _LogInScreenState extends State<LogInScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isObscureText = true;
   bool _isLoading = false;
+  String _selectedUserType = 'user'; // Add this variable to track user type
 
-// Log-in method
+  // Log-in method
   Future<void> _loginCredentials() async {
     if (_formKey.currentState!.validate()) {
       try {
@@ -39,7 +40,7 @@ class _LogInScreenState extends State<LogInScreen> {
 
         if (userCredential.user != null) {
           DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-              .collection('users')
+              .collection(_selectedUserType == 'admin' ? 'admins' : 'users')
               .doc(userCredential.user!.uid)
               .get();
 
@@ -48,7 +49,7 @@ class _LogInScreenState extends State<LogInScreen> {
               userSnapshot.data() as Map<String, dynamic>,
             );
 
-            if (userModel.isAdmin!) {
+            if (userModel.isAdmin! || _selectedUserType == 'admin') {
               // Navigate to admin dashboard
               navigateTo(context, AdminDashBoard());
             } else {
@@ -77,6 +78,35 @@ class _LogInScreenState extends State<LogInScreen> {
         });
       }
     }
+  }
+
+  // Radio button group for user type selection
+  Widget _buildUserTypeSelection() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Radio(
+          value: 'user',
+          groupValue: _selectedUserType,
+          onChanged: (value) {
+            setState(() {
+              _selectedUserType = value.toString();
+            });
+          },
+        ),
+        const Text('User'),
+        Radio(
+          value: 'admin',
+          groupValue: _selectedUserType,
+          onChanged: (value) {
+            setState(() {
+              _selectedUserType = value.toString();
+            });
+          },
+        ),
+        const Text('Admin'),
+      ],
+    );
   }
 
   @override
@@ -167,6 +197,7 @@ class _LogInScreenState extends State<LogInScreen> {
                               navigateTo(context, SignUpScreen());
                             },
                           ),
+                          _buildUserTypeSelection(),
                           ElevatedButton(
                             onPressed: _isLoading
                                 ? null

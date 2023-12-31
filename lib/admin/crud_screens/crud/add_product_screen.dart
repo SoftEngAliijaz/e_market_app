@@ -2,8 +2,9 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_market_app/admin/dashboard/admin_dashboard_screen.dart';
+import 'package:e_market_app/constants/constants.dart';
 import 'package:e_market_app/models/product_model/product_model.dart';
-import 'package:e_market_app/user_side/home/home_screen.dart';
 import 'package:e_market_app/widgets/custom_text_field.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -11,18 +12,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddProductScreen extends StatefulWidget {
-  final String? getId;
-  final String? getName;
-  final String? getDescription;
-  final String? getPrice;
-
-  const AddProductScreen({
-    Key? key,
-    this.getId,
-    this.getName,
-    this.getDescription,
-    this.getPrice,
-  }) : super(key: key);
+  const AddProductScreen({Key? key}) : super(key: key);
 
   @override
   State<AddProductScreen> createState() => _AddProductScreenState();
@@ -39,14 +29,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
   Future<void> addProducts() async {
     try {
       if (globalkey.currentState!.validate()) {
+        // Validate price
+        if (double.tryParse(_priceController.text) == null) {
+          Fluttertoast.showToast(msg: 'Please enter a valid price');
+          return;
+        }
         await _uploadImage();
         Fluttertoast.showToast(msg: 'Product Added Successfully');
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const HomeScreen(),
-          ),
-        );
+        navigateTo(context, AdminDashBoard());
       }
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
@@ -155,12 +145,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   onPressed: () {
                                     _showModalBottomSheetSuggestions();
                                   },
-                                  icon: Icon(Icons.image_outlined),
+                                  icon: const Icon(Icons.image_outlined),
                                 ),
                         ),
                         sizedbox(),
                         ElevatedButton(
-                          child: Text('Add Product'),
+                          child: const Text('Add Product'),
                           onPressed: () async {
                             await addProducts();
                           },
@@ -266,7 +256,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   Widget sizedbox() {
-    return SizedBox(
+    return const SizedBox(
       height: 20,
     );
   }

@@ -22,7 +22,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _rePassC = TextEditingController();
   final TextEditingController _adminCodeController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _isObscureText = true;
+  bool _isObscureText1 = true;
+  bool _isObscureText2 = true;
   bool _isLoading = false;
   String? _selectedUserType; // Add this variable to track user type
 
@@ -171,7 +172,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             CustomTextField(
                               textEditingController: _passwordC,
                               prefixIcon: Icons.password_outlined,
-                              obscureText: _isObscureText,
+                              obscureText: _isObscureText1,
                               hintText: 'Enter Password',
                               validator: (v) {
                                 if (v!.isEmpty) {
@@ -184,11 +185,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               suffixWidget: IconButton(
                                 onPressed: () {
                                   setState(() {
-                                    _isObscureText = !_isObscureText;
+                                    _isObscureText1 = !_isObscureText1;
                                   });
                                 },
                                 icon: Icon(
-                                  _isObscureText
+                                  _isObscureText1
                                       ? Icons.visibility_outlined
                                       : Icons.visibility_off_outlined,
                                 ),
@@ -197,7 +198,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             CustomTextField(
                               textEditingController: _rePassC,
                               prefixIcon: Icons.password_outlined,
-                              obscureText: _isObscureText,
+                              obscureText: _isObscureText2,
                               hintText: 'Re-Enter Password',
                               validator: (v) {
                                 if (v!.isEmpty) {
@@ -210,11 +211,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               suffixWidget: IconButton(
                                 onPressed: () {
                                   setState(() {
-                                    _isObscureText = !_isObscureText;
+                                    _isObscureText2 = !_isObscureText2;
                                   });
                                 },
                                 icon: Icon(
-                                  _isObscureText
+                                  _isObscureText2
                                       ? Icons.visibility_outlined
                                       : Icons.visibility_off_outlined,
                                 ),
