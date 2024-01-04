@@ -30,7 +30,7 @@ class AppUtils {
   ///profile screen info cards
   ///where we show profile info
   ///like name,email etc
-  static Card profileCard(
+  static Card userProfileCard(
     IconData leadingIcon,
     String title,
   ) {

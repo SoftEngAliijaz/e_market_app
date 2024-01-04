@@ -47,9 +47,6 @@ class HomeScreen extends StatelessWidget {
             /// user profiel data
             const UserProfileData(),
 
-            ///Divider
-            const Divider(),
-
             /// Carousel Slider
             carouselSliderMethod(),
           ],

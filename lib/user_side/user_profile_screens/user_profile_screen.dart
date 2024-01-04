@@ -75,12 +75,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 sizedbox(),
 
                 ///profile cards
-                AppUtils.profileCard(
+                AppUtils.userProfileCard(
                     Icons.person_outline, user['displayName'].toString()),
 
                 sizedbox(),
 
-                AppUtils.profileCard(
+                AppUtils.userProfileCard(
                     Icons.email_outlined, user['email'].toString()),
 
                 sizedbox(),

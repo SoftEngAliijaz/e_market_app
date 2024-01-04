@@ -4,6 +4,7 @@ import 'package:e_market_app/admin/dashboard/admin_dashboard_screen.dart';
 import 'package:e_market_app/user_side/home/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class UserActivityCycleScreen extends StatelessWidget {
   const UserActivityCycleScreen({Key? key}) : super(key: key);
@@ -22,7 +23,7 @@ class UserActivityCycleScreen extends StatelessWidget {
         isAdmin = true;
       }
     } catch (e) {
-      print('Error checking admin status: $e');
+      Fluttertoast.showToast(msg: 'Error checking admin status: $e');
     }
 
     return isAdmin;

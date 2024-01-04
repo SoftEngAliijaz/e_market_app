@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_market_app/constants/constants.dart';
 import 'package:flutter/material.dart';
 
 class ProductCartScreen extends StatelessWidget {
@@ -6,17 +7,17 @@ class ProductCartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cart'),
+        title: const Text('Cart'),
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('cart').snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: AppUtils.customProgressIndicator());
           }
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('No items in the cart'));
+            return const Center(child: Text('No items in the cart'));
           }
 
           return ListView.builder(

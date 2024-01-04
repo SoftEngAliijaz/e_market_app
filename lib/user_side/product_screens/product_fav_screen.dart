@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:e_market_app/constants/constants.dart';
 import 'package:e_market_app/models/product_model/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,9 +18,8 @@ class ProductFavScreen extends StatelessWidget {
               FirebaseFirestore.instance.collection('favorites').snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                  child:
-                      CircularProgressIndicator()); // Loading indicator while data is being fetched
+              // Loading indicator while data is being fetched
+              return Center(child: AppUtils.customProgressIndicator());
             }
 
             if (snapshot.hasError) {
@@ -28,9 +28,8 @@ class ProductFavScreen extends StatelessWidget {
 
             // Check if there are no documents in the collection
             if (snapshot.data?.docs.isEmpty ?? true) {
-              return Center(
-                child: Text('No favorite products available.'),
-              );
+              return const Center(
+                  child: Text('No favorite products available.'));
             }
 
             // Extract the list of products from the snapshot
