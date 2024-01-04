@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/constants/constants.dart';
+import 'package:e_market_app/firebase_services/firebase_services.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -59,12 +60,11 @@ class DeleteProductScreen extends StatelessWidget {
                                 ),
                                 ElevatedButton(
                                   onPressed: () async {
-                                    await FirebaseFirestore.instance
-                                        .collection('products')
-                                        .doc(productData.id)
-                                        .delete()
+                                    await FirebaseServices()
+                                        .deleteProduct(productData.id)
                                         .whenComplete(
-                                            () => Navigator.pop(context))
+                                          () => Navigator.pop(context),
+                                        )
                                         .then((value) => Fluttertoast.showToast(
                                             msg:
                                                 'Deleted ${productData['name']}'));

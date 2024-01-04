@@ -1,9 +1,5 @@
-import 'package:e_market_app/admin/crud_screens/crud/add_product_screen.dart';
-import 'package:e_market_app/admin/crud_screens/crud/delete_product_screen.dart';
-import 'package:e_market_app/admin/crud_screens/crud/update_product_screen.dart';
-import 'package:e_market_app/admin/crud_screens/crud/view_product_screen.dart';
-import 'package:e_market_app/admin/crud_screens/product_screens/product_cart_screen.dart';
-import 'package:e_market_app/admin/crud_screens/product_screens/product_fav_screen.dart';
+import 'package:e_market_app/user_side/product_screens/product_cart_screen.dart';
+import 'package:e_market_app/user_side/product_screens/product_fav_screen.dart';
 import 'package:e_market_app/credientals/login_screen.dart';
 import 'package:e_market_app/user_side/user_profile_screens/user_profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,7 +7,7 @@ import 'package:flutter/material.dart';
 
 ///firebase auth instance
 // Create a drawer component for navigation
-Drawer drawerComponent(BuildContext context) {
+Drawer userHomeDrawer(BuildContext context) {
   return Drawer(
     child: ListView(
       children: [
@@ -46,35 +42,6 @@ Drawer drawerComponent(BuildContext context) {
           }));
         }, Icons.person_outline, 'Profile'),
 
-        // List tiles for various navigation options
-        // Navigate to the AddProductScreen
-        _listTileComponent(context, () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) {
-            return const AddProductScreen();
-          }));
-        }, Icons.add_outlined, 'Add Products'),
-
-        // Navigate to the UpdateProductScreen
-        _listTileComponent(context, () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) {
-            return const UpdateProductScreen();
-          }));
-        }, Icons.update_outlined, 'Update Products'),
-
-        // Navigate to the DeleteProductScreen
-        _listTileComponent(context, () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) {
-            return const DeleteProductScreen();
-          }));
-        }, Icons.delete_outline, 'Delete Products'),
-
-        // Navigate to the ViewProductScreen
-        _listTileComponent(context, () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) {
-            return const ViewProductScreen();
-          }));
-        }, Icons.view_agenda_outlined, 'View Products'),
-
         // Navigate to the ProductCartScreen
         _listTileComponent(context, () {
           Navigator.push(context, MaterialPageRoute(builder: (_) {
@@ -92,6 +59,7 @@ Drawer drawerComponent(BuildContext context) {
         // Sign out user and navigate to the LogInScreen
         _listTileComponent(context, () async {
           await FirebaseAuth.instance.signOut();
+          // ignore: use_build_context_synchronously
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) {
             return const LogInScreen();
           }), (route) => false);

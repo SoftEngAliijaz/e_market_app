@@ -47,8 +47,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         radius: 100,
                         backgroundColor: Colors.grey,
                         child: InkWell(
-                          onTap: () => showModalBottomSheetSuggestions(context),
-                          child: Container(
+                          onTap: () {
+                            showModalBottomSheetSuggestions(context);
+                          },
+                          child: SizedBox(
                             width: double.infinity,
                             height: double.infinity,
                             child: _pickedImage != null
@@ -62,7 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         backgroundImage:
                                             NetworkImage(user['photoURL']),
                                       )
-                                    : const Icon(Icons.person, size: 80),
+                                    : const Icon(Icons.person, size: 100.0),
                           ),
                         ),
                       ),
@@ -165,7 +167,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   ///
-  ///
   Future<String?> uploadImageAndGetDownloadURL(File imageFile) async {
     try {
       /// Upload the image to Firebase Storage and get the download URL using Firebase Storage:
@@ -176,9 +177,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       UploadTask uploadTask = storageRef.putFile(imageFile);
       TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
       String downloadURL = await taskSnapshot.ref.getDownloadURL();
-
-      // For simplicity, let's assume we have the downloadURL (replace this with your actual logic)
-      // String downloadURL = 'https://example.com/path/to/downloaded/image.jpg';
 
       return downloadURL;
     } catch (e) {

@@ -1,6 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/admin/dashboard/admin_dashboard_screen.dart';
-import 'package:e_market_app/constants/constants.dart';
 import 'package:e_market_app/security_utils/security_utils.dart';
 import 'package:e_market_app/user_side/home/home_screen.dart';
 import 'package:e_market_app/widgets/account_selection.dart';
@@ -24,6 +24,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isObscureText1 = true;
   bool _isObscureText2 = true;
+  bool _isObscureForAdmin = true;
   bool _isLoading = false;
   String? _selectedUserType; // Add this variable to track user type
 
@@ -88,8 +89,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ///setting route for user and admin after signup
         ///directly to their desired screens
         _selectedUserType == 'user'
-            ? navigateTo(context, HomeScreen())
-            : navigateTo(context, const AdminDashBoard());
+            ? Navigator.push(context, MaterialPageRoute(builder: (_) {
+                return const HomeScreen();
+              }))
+            : Navigator.push(context, MaterialPageRoute(builder: (_) {
+                return const AdminDashBoard();
+              }));
 
         ///FirebaseAuthException
       } on FirebaseAuthException catch (e) {
@@ -138,7 +143,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            CircleAvatar(
+                            const CircleAvatar(
                               radius: 100,
                               backgroundImage: AssetImage(
                                   'assets/images/e_commerce_logo.png'),
@@ -253,21 +258,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 textEditingController: _adminCodeController,
                                 prefixIcon: Icons.lock_outline,
                                 hintText: 'Enter Admin Code',
+                                obscureText: true,
                                 validator: (v) {
                                   if (v!.isEmpty) {
                                     return 'Field Should Not be Empty';
                                   }
                                   return null;
                                 },
+                                suffixWidget: IconButton(
+                                  icon: Icon(
+                                    _isObscureForAdmin
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color: Theme.of(context).primaryColorDark,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isObscureForAdmin = !_isObscureForAdmin;
+                                    });
+                                  },
+                                ),
                               ),
                             ElevatedButton(
-                              child: Text(
-                                  _isLoading ? 'SIGNING UP...' : 'SIGN UP'),
                               onPressed: _isLoading
                                   ? null
                                   : () {
                                       _signUpCredentials();
                                     },
+                              child: Text(
+                                  _isLoading ? 'SIGNING UP...' : 'SIGN UP'),
                             ),
                             AccountSelection(
                               title: 'Already have an account?',

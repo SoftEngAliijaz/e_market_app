@@ -3,7 +3,6 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/admin/dashboard/admin_dashboard_screen.dart';
-import 'package:e_market_app/constants/constants.dart';
 import 'package:e_market_app/models/product_model/product_model.dart';
 import 'package:e_market_app/widgets/custom_text_field.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -36,7 +35,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
         }
         await _uploadImage();
         Fluttertoast.showToast(msg: 'Product Added Successfully');
-        navigateTo(context, AdminDashBoard());
+        Navigator.push(context, MaterialPageRoute(builder: (_) {
+          return AdminDashBoard();
+        }));
       }
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());

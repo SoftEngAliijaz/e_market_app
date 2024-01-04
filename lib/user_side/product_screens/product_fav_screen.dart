@@ -45,7 +45,8 @@ class ProductFavScreen extends StatelessWidget {
                 final value = favoriteProducts[index];
                 return ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: CachedNetworkImageProvider(value.imageUrl),
+                    backgroundImage:
+                        CachedNetworkImageProvider(value.imageUrl!),
                   ),
                   title: Text(value.name),
                   subtitle: Text(value.description),

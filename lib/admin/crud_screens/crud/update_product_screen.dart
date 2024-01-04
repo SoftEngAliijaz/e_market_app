@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/constants/constants.dart';
+import 'package:e_market_app/firebase_services/firebase_services.dart';
+import 'package:e_market_app/models/product_model/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -53,28 +55,27 @@ class UpdateProductScreen extends StatelessWidget {
                           context: context,
                           builder: (_) {
                             return AlertDialog(
-                              title: Text('Update Product'),
+                              title: const Text('Update Product'),
                               content: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   TextFormField(
                                     controller: nameController,
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       hintText: "Product Name",
                                     ),
                                   ),
                                   TextFormField(
                                     controller: descriptionController,
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       hintText: "Description",
                                     ),
                                   ),
                                   TextFormField(
                                     controller: priceController,
                                     keyboardType: TextInputType.number,
-                                    decoration: InputDecoration(
-                                      hintText: "Price",
-                                    ),
+                                    decoration: const InputDecoration(
+                                        hintText: "Price"),
                                   ),
                                 ],
                               ),
@@ -83,27 +84,27 @@ class UpdateProductScreen extends StatelessWidget {
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
-                                  child: Text("Cancel"),
+                                  child: const Text("Cancel"),
                                 ),
                                 ElevatedButton(
                                   onPressed: () async {
-                                    await FirebaseFirestore.instance
-                                        .collection('products')
-                                        .doc(productData.id)
-                                        .update({
-                                          'name': nameController.text,
-                                          'description':
-                                              descriptionController.text,
-                                          'price': double.parse(
-                                              priceController.text),
-                                        })
-                                        .whenComplete(
-                                            () => Navigator.pop(context))
-                                        .then((value) => Fluttertoast.showToast(
-                                            msg:
-                                                'Updated ${nameController.text}'));
+                                    ProductModel updateProduct = ProductModel(
+                                      id: productData.id,
+                                      name: nameController.text,
+                                      description: descriptionController.text,
+                                      price: double.parse(priceController.text),
+                                    );
+
+                                    await FirebaseServices()
+                                        .updateProduct(updateProduct);
+
+                                    Navigator.pop(context);
+
+                                    Fluttertoast.showToast(
+                                      msg: 'Updated ${nameController.text}',
+                                    );
                                   },
-                                  child: Text("Update"),
+                                  child: const Text("Update"),
                                 ),
                               ],
                             );
@@ -125,9 +126,9 @@ class UpdateProductScreen extends StatelessWidget {
 }
 
 // import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:e_market_app/constants/constants.dart';
 // import 'package:flutter/material.dart';
 // import 'package:fluttertoast/fluttertoast.dart';
-// import 'package:shopbiz_app/constants/constants.dart';
 
 // class UpdateProductScreen extends StatelessWidget {
 //   const UpdateProductScreen({Key? key}) : super(key: key);
@@ -147,9 +148,9 @@ class UpdateProductScreen extends StatelessWidget {
 //           if (!snapshot.hasData ||
 //               snapshot.data == null ||
 //               snapshot.data!.docs.isEmpty) {
-//             // Display a message if there is no data
 //             return const Center(
-//                 child: Text('No products available to Delete.'));
+//               child: Text('No products available to Update.'),
+//             );
 //           }
 //           if (snapshot.hasData) {
 //             return ListView.builder(
@@ -183,7 +184,6 @@ class UpdateProductScreen extends StatelessWidget {
 //                               content: Column(
 //                                 mainAxisSize: MainAxisSize.min,
 //                                 children: [
-//                                   // TextFormFields for updating product information
 //                                   TextFormField(
 //                                     controller: nameController,
 //                                     decoration: InputDecoration(
@@ -214,7 +214,6 @@ class UpdateProductScreen extends StatelessWidget {
 //                                 ),
 //                                 ElevatedButton(
 //                                   onPressed: () async {
-//                                     // Update the product information in Firestore
 //                                     await FirebaseFirestore.instance
 //                                         .collection('products')
 //                                         .doc(productData.id)

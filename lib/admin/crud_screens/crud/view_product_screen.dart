@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/constants/constants.dart';
+import 'package:e_market_app/firebase_services/firebase_services.dart';
 import 'package:e_market_app/models/product_model/product_model.dart';
-import 'package:e_market_app/admin/crud_screens/product_screens/product_detail_screens.dart';
+import 'package:e_market_app/user_side/product_screens/product_detail_screens.dart';
 import 'package:flutter/material.dart';
 
 class ViewProductScreen extends StatelessWidget {
@@ -13,46 +13,41 @@ class ViewProductScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('View Products'),
       ),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('products').snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.connectionState == ConnectionState.active ||
-              snapshot.hasData) {
-            if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
-              return Center(child: Text('No products available'));
-            } else {
-              return ListView.separated(
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final productData = snapshot.data!.docs[index];
-
-                  return InkWell(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) {
-                        return ProductDetailScreen(
-                          product: ProductModel.fromJson(
-                              productData.data() as Map<String, dynamic>),
-                        );
-                      }));
-                    },
-                    child: _productCard(ProductModel.fromJson(
-                        productData.data() as Map<String, dynamic>)),
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return const Divider();
-                },
-              );
-            }
-          } else {
+      body: FutureBuilder<List<ProductModel>>(
+        future: FirebaseServices().getProducts(),
+        builder:
+            (BuildContext context, AsyncSnapshot<List<ProductModel>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: AppUtils.customProgressIndicator());
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No products available'));
+          } else {
+            return ListView.separated(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (BuildContext context, int index) {
+                ///
+                final value = snapshot.data![index];
+
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) {
+                      return ProductDetailScreen(product: value);
+                    }));
+                  },
+                  child: _productCard(value),
+                );
+              },
+              separatorBuilder: (context, index) {
+                return const Divider();
+              },
+            );
           }
         },
       ),
     );
   }
 
-  Card _productCard(ProductModel product) {
+  Card _productCard(ProductModel productModel) {
     return Card(
       color: Colors.white,
       child: Container(
@@ -64,26 +59,26 @@ class ViewProductScreen extends StatelessWidget {
               child: Container(
                 color: Colors.white,
                 child: Image.network(
-                  product.imageUrl,
+                  productModel.imageUrl!,
                   fit: BoxFit.contain,
                   width: double.infinity,
                 ),
               ),
             ),
-            Divider(),
+            const Divider(),
             ListTile(
               tileColor: Colors.white,
               leading: CircleAvatar(
                 child: Center(
                   child: Text(
-                    product.id,
+                    productModel.id,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
-              title: Text(product.name),
-              subtitle: Text(product.description),
-              trailing: Text("Price: ${product.price}"),
+              title: Text(productModel.name),
+              subtitle: Text(productModel.description),
+              trailing: Text("Price: ${productModel.price}"),
             ),
           ],
         ),
@@ -92,11 +87,11 @@ class ViewProductScreen extends StatelessWidget {
   }
 }
 
-
 // import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:e_market_app/constants/constants.dart';
+// import 'package:e_market_app/models/product_model/product_model.dart';
+// import 'package:e_market_app/user_side/product_screens/product_detail_screens.dart';
 // import 'package:flutter/material.dart';
-// import 'package:shopbiz_app/constants/constants.dart';
-// import 'package:shopbiz_app/screens/crud_screens/product_screens/product_detail_screens.dart';
 
 // class ViewProductScreen extends StatelessWidget {
 //   const ViewProductScreen({Key? key}) : super(key: key);
@@ -110,45 +105,35 @@ class ViewProductScreen extends StatelessWidget {
 //       body: StreamBuilder(
 //         stream: FirebaseFirestore.instance.collection('products').snapshots(),
 //         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-//           // 1. Check if connection state is active or has data
 //           if (snapshot.connectionState == ConnectionState.active ||
 //               snapshot.hasData) {
-//             // 2. Check if snapshot data is null or the document list is empty
 //             if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
-//               // 3. Display a loading indicator if there is no data yet
 //               return Center(child: Text('No products available'));
 //             } else {
-//               // 4. Display the list of products
 //               return ListView.separated(
 //                 itemCount: snapshot.data!.docs.length,
 //                 itemBuilder: (BuildContext context, int index) {
-//                   // 5. Access individual product data
 //                   final productData = snapshot.data!.docs[index];
 
 //                   return InkWell(
 //                     onTap: () {
-//                       // 6. Navigate to the product detail screen when tapped
 //                       Navigator.push(context, MaterialPageRoute(builder: (_) {
 //                         return ProductDetailScreen(
-//                           getId: productData['id'],
-//                           getTitle: productData['name'],
-//                           getDescription: productData['description'],
-//                           getPrice: productData['price'],
-//                           getImage: productData['imageUrl'],
+//                           product: ProductModel.fromJson(
+//                               productData.data() as Map<String, dynamic>),
 //                         );
 //                       }));
 //                     },
-//                     child: _productCard(productData),
+//                     child: _productCard(ProductModel.fromJson(
+//                         productData.data() as Map<String, dynamic>)),
 //                   );
 //                 },
 //                 separatorBuilder: (context, index) {
-//                   // 7. Divider between product items
 //                   return const Divider();
 //                 },
 //               );
 //             }
 //           } else {
-//             // 8. Display a loading indicator if the connection state is not active
 //             return Center(child: AppUtils.customProgressIndicator());
 //           }
 //         },
@@ -156,7 +141,7 @@ class ViewProductScreen extends StatelessWidget {
 //     );
 //   }
 
-//   Card _productCard(QueryDocumentSnapshot<Object?> productData) {
+//   Card _productCard(ProductModel product) {
 //     return Card(
 //       color: Colors.white,
 //       child: Container(
@@ -168,9 +153,8 @@ class ViewProductScreen extends StatelessWidget {
 //               child: Container(
 //                 color: Colors.white,
 //                 child: Image.network(
-//                   // 9. Load product image from the network
-//                   productData['imageUrl'],
-//                   fit: BoxFit.cover,
+//                   product.imageUrl!,
+//                   fit: BoxFit.contain,
 //                   width: double.infinity,
 //                 ),
 //               ),
@@ -180,18 +164,15 @@ class ViewProductScreen extends StatelessWidget {
 //               tileColor: Colors.white,
 //               leading: CircleAvatar(
 //                 child: Center(
-//                   // 10. Display product ID in the circle avatar
 //                   child: Text(
-//                     productData['id'],
+//                     product.id,
 //                     overflow: TextOverflow.ellipsis,
 //                   ),
 //                 ),
 //               ),
-//               // 11. Display product name in the title
-//               title: Text(productData['name']),
-//               // 12. Display product description in the subtitle
-//               subtitle: Text(productData['description']),
-//               trailing: Text("Price: ${productData['price']}"),
+//               title: Text(product.name),
+//               subtitle: Text(product.description),
+//               trailing: Text("Price: ${product.price}"),
 //             ),
 //           ],
 //         ),

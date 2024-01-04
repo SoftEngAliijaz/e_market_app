@@ -8,6 +8,10 @@ class AppUtils {
   static const String splashScreenBgImg =
       'https://images.unsplash.com/photo-1702187600537-5eea13f96937?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
 
+  ///no dp image
+  static const String noProfileImage =
+      'https://dpemoji.com/wp-content/uploads/2023/10/19-1-2-500x500.jpg';
+
   ///CircularProgressIndicator
   static Center customProgressIndicator() => const Center(
           child: CircularProgressIndicator(
@@ -41,11 +45,3 @@ class AppUtils {
 ///sizedbox custom
 ///not added in class to access quickly
 SizedBox sizedbox() => const SizedBox(height: 10);
-
-///navigation custom method
-///not added in class to access quickly
-navigateTo(BuildContext context, Widget nextScreen) {
-  Navigator.push(context, MaterialPageRoute(builder: (_) {
-    return nextScreen;
-  }));
-}

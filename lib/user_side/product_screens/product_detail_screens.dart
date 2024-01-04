@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_market_app/constants/constants.dart';
+import 'package:e_market_app/user_side/product_screens/product_cart_screen.dart';
+import 'package:e_market_app/user_side/product_screens/product_fav_screen.dart';
 import 'package:e_market_app/models/product_model/product_model.dart';
-import 'package:e_market_app/admin/crud_screens/product_screens/product_cart_screen.dart';
-import 'package:e_market_app/admin/crud_screens/product_screens/product_fav_screen.dart';
 import 'package:flutter/material.dart';
 
 class ProductDetailScreen extends StatefulWidget {
@@ -115,7 +114,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         'price': widget.product!.price,
         'image': widget.product!.imageUrl,
       });
-      navigateTo(context, ProductCartScreen());
+      Navigator.push(context, MaterialPageRoute(builder: (_) {
+        return ProductCartScreen();
+      }));
     } else {
       // Remove from cart
       await cartReference.doc(widget.product!.id).delete();
@@ -141,110 +142,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         'price': widget.product!.price,
         'image': widget.product!.imageUrl,
       });
-      navigateTo(context, ProductFavScreen());
+      Navigator.push(context, MaterialPageRoute(builder: (_) {
+        return ProductFavScreen();
+      }));
     } else {
       // Remove from favorites
       await favoritesReference.doc(widget.product!.id).delete();
     }
   }
 }
-
-
-// import 'package:flutter/material.dart';
-// import 'package:shopbiz_app/models/product_model/product_model.dart';
-
-// class ProductDetailScreen extends StatefulWidget {
-//   final String? getId;
-//   final String? getTitle;
-//   final String? getDescription;
-//   final String? getPrice;
-//   final String? getImage;
-//   final ProductModel? product;
-
-//   const ProductDetailScreen({
-//     Key? key,
-//     this.getId,
-//     this.getTitle,
-//     this.getDescription,
-//     this.getPrice,
-//     this.getImage,
-//     this.product,
-//   }) : super(key: key);
-
-//   @override
-//   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
-// }
-
-// class _ProductDetailScreenState extends State<ProductDetailScreen> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text(widget.getTitle!),
-//       ),
-//       bottomNavigationBar: SizedBox(
-//         child: Row(
-//           children: [
-//             Expanded(
-//               child: TextButton.icon(
-//                 style: TextButton.styleFrom(
-//                   shape:
-//                       RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-//                   backgroundColor: Colors.blue,
-//                   iconColor: Colors.red,
-//                 ),
-//                 onPressed: () {},
-//                 icon: Icon(Icons.favorite),
-//                 label: Text(
-//                   'Add to Favitore',
-//                   style: TextStyle(color: Colors.white),
-//                 ),
-//               ),
-//             ),
-//             Expanded(
-//               child: TextButton.icon(
-//                 style: TextButton.styleFrom(
-//                   shape:
-//                       RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-//                   backgroundColor: Colors.blue,
-//                   iconColor: Colors.red,
-//                 ),
-//                 onPressed: () {},
-//                 icon: Icon(Icons.shopping_bag),
-//                 label: Text(
-//                   'Add to Cart',
-//                   style: TextStyle(color: Colors.white),
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//       body: Container(
-//         child: Column(
-//           children: [
-//             Container(
-//               height: 300,
-//               width: double.infinity,
-//               child: Center(
-//                 child: Image.network(
-//                   widget.getImage!,
-//                   fit: BoxFit.contain,
-//                   width: double.infinity,
-//                 ),
-//               ),
-//             ),
-//             ListTile(
-//               leading: CircleAvatar(
-//                 child: Text(widget.getId!),
-//               ),
-//               title: Text(widget.getTitle!),
-//               subtitle: Text(widget.getDescription!),
-//               trailing: Text(widget.getPrice!),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

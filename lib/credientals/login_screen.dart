@@ -2,7 +2,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/admin/dashboard/admin_dashboard_screen.dart';
-import 'package:e_market_app/constants/constants.dart';
 import 'package:e_market_app/credientals/signup_screen.dart';
 import 'package:e_market_app/models/user_model/user_model.dart';
 import 'package:e_market_app/user_side/home/home_screen.dart';
@@ -50,11 +49,15 @@ class _LogInScreenState extends State<LogInScreen> {
             );
 
             if (userModel.isAdmin! || _selectedUserType == 'admin') {
-              // Navigate to admin dashboard
-              navigateTo(context, AdminDashBoard());
+              /// Navigate to admin dashboard
+              Navigator.push(context, MaterialPageRoute(builder: (_) {
+                return AdminDashBoard();
+              }));
             } else {
-              // Navigate to home screen
-              navigateTo(context, HomeScreen());
+              /// Navigate to home screen
+              Navigator.push(context, MaterialPageRoute(builder: (_) {
+                return HomeScreen();
+              }));
             }
           } else {
             Fluttertoast.showToast(msg: 'User data does not exist');
@@ -194,7 +197,10 @@ class _LogInScreenState extends State<LogInScreen> {
                             title: 'Do not have account?',
                             buttonTitle: 'SIGNUP',
                             onPressed: () {
-                              navigateTo(context, SignUpScreen());
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (_) {
+                                return SignUpScreen();
+                              }));
                             },
                           ),
                           _buildUserTypeSelection(),
