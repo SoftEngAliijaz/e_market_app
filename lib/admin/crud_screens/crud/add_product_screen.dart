@@ -1,559 +1,360 @@
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_market_app/admin/dashboard/admin_dashboard_screen.dart';
+import 'package:e_market_app/models/product_model/categories_model.dart';
 import 'package:e_market_app/models/product_model/product_model.dart';
 import 'package:e_market_app/widgets/custom_text_field.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 class AddProductScreen extends StatefulWidget {
-  const AddProductScreen({Key? key}) : super(key: key);
+  static const String id = "addproduct";
 
   @override
   State<AddProductScreen> createState() => _AddProductScreenState();
 }
 
 class _AddProductScreenState extends State<AddProductScreen> {
-  final TextEditingController _idController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  var globalkey = GlobalKey<FormState>();
-  File? _pickedImage;
+  ///controllers
+  TextEditingController categoryController = TextEditingController();
+  TextEditingController idController = TextEditingController();
+  TextEditingController productNameController = TextEditingController();
+  TextEditingController productDescriptionController = TextEditingController();
+  TextEditingController brandController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController discountPriceController = TextEditingController();
+  TextEditingController serialCodeController = TextEditingController();
 
-  Future<void> addProducts() async {
-    try {
-      if (globalkey.currentState!.validate()) {
-        // Validate price
-        if (double.tryParse(_priceController.text) == null) {
-          Fluttertoast.showToast(msg: 'Please enter a valid price');
-          return;
-        }
-        await _uploadImage();
-        Fluttertoast.showToast(msg: 'Product Added Successfully');
-        Navigator.push(context, MaterialPageRoute(builder: (_) {
-          return AdminDashBoard();
-        }));
-      }
-    } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
-    }
+  ///variables in boolean
+  bool isOnSale = false;
+  bool isPopular = false;
+  bool isFavourite = false;
+  bool isSaving = false;
+  bool isUploading = false;
+
+  ///variables
+  String? selectedCategory;
+  final imagePicker = ImagePicker();
+  List<XFile> images = [];
+  List<String> imageUrls = [];
+  var uuid = Uuid();
+
+  @override
+  void dispose() {
+    /// Clearing
+    categoryController.clear();
+    idController.clear();
+    productNameController.clear();
+    productDescriptionController.clear();
+    brandController.clear();
+    priceController.clear();
+    discountPriceController.clear();
+    serialCodeController.clear();
+
+    /// Disposing
+    categoryController.dispose();
+    idController.dispose();
+    productNameController.dispose();
+    productDescriptionController.dispose();
+    brandController.dispose();
+    priceController.dispose();
+    discountPriceController.dispose();
+    serialCodeController.dispose();
+
+    ///Called when this object is removed from the tree permanently.
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add Product'),
-      ),
-      body: SizedBox(
-        height: size.height,
-        width: size.width,
-        child: Center(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Form(
-              key: globalkey,
-              child: Container(
-                height: size.height * 0.90,
-                width: size.width,
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          child: const CircleAvatar(
-                            radius: 100,
-                            backgroundImage:
-                                AssetImage('assets/images/e_commerce_logo.png'),
-                          ),
-                        ),
-                        sizedbox(),
-                        CustomTextField(
-                          textEditingController: _idController,
-                          prefixIcon: Icons.numbers_outlined,
-                          hintText: 'Enter Product ID',
-                          validator: (v) {
-                            if (v!.isEmpty) {
-                              return 'Field Should not be Empty';
-                            } else {
-                              return null;
-                            }
-                          },
-                        ),
-                        sizedbox(),
-                        CustomTextField(
-                          textEditingController: _nameController,
-                          prefixIcon: Icons.production_quantity_limits_outlined,
-                          hintText: 'Enter Product Name',
-                          validator: (v) {
-                            if (v!.isEmpty) {
-                              return 'Field Should not be Empty';
-                            } else {
-                              return null;
-                            }
-                          },
-                        ),
-                        sizedbox(),
-                        CustomTextField(
-                          textEditingController: _descriptionController,
-                          prefixIcon: Icons.production_quantity_limits_outlined,
-                          hintText: 'Enter Product Description',
-                          validator: (v) {
-                            if (v!.isEmpty) {
-                              return 'Field Should not be Empty';
-                            } else {
-                              return null;
-                            }
-                          },
-                        ),
-                        sizedbox(),
-                        CustomTextField(
-                          textEditingController: _priceController,
-                          prefixIcon: Icons.production_quantity_limits_outlined,
-                          hintText: 'Enter Product Price',
-                          validator: (v) {
-                            if (v!.isEmpty) {
-                              return 'Field Should not be Empty';
-                            } else {
-                              return null;
-                            }
-                          },
-                        ),
-                        sizedbox(),
-                        Container(
-                          height: 200,
-                          width: size.width,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(0.2),
-                            border: Border.all(),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: _pickedImage != null
-                              ? Image.file(
-                                  _pickedImage!,
-                                  height: 100,
-                                  width: 100,
-                                )
-                              : IconButton(
-                                  onPressed: () {
-                                    _showModalBottomSheetSuggestions();
-                                  },
-                                  icon: const Icon(Icons.image_outlined),
-                                ),
-                        ),
-                        sizedbox(),
-                        ElevatedButton(
-                          child: const Text('Add Product'),
-                          onPressed: () async {
-                            await addProducts();
-                          },
-                        ),
-                      ],
+    return Material(
+      child: Scaffold(
+          body: SingleChildScrollView(
+        child: Container(
+          child: Center(
+            child: Column(
+              children: [
+                // DropdownButtonFormField
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 17, vertical: 7),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: DropdownButtonFormField(
+                    hint: const Text("choose category"),
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.all(10),
                     ),
+                    validator: (value) {
+                      if (value == null) {
+                        return "category must be selected";
+                      }
+                      return null;
+                    },
+                    value: selectedCategory,
+                    items: categories
+                        .map(
+                          (e) => DropdownMenuItem<String>(
+                            value: e.title,
+                            child: Text(e.title!),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedCategory = value.toString();
+                      });
+                    },
                   ),
                 ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showModalBottomSheetSuggestions() {
-    showModalBottomSheet(
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-            child: Wrap(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.camera_alt_outlined),
-                  title: const Text('Pick From Camera'),
-                  onTap: () => {_pickFromCamera()},
+                CustomTextField(
+                  textEditingController: productNameController,
+                  hintText: "enter product name...",
+                  validator: (v) {
+                    if (v!.isEmpty) {
+                      return "should not be empty";
+                    }
+                    return null;
+                  },
                 ),
-                ListTile(
-                  leading: const Icon(Icons.image_search_outlined),
-                  title: const Text('Pick From Gallery'),
-                  onTap: () => {_pickFromGallery()},
+                CustomTextField(
+                  textEditingController: productDescriptionController,
+                  hintText: "enter product detail...",
+                  validator: (v) {
+                    if (v!.isEmpty) {
+                      return "should not be empty";
+                    }
+                    return null;
+                  },
+                ),
+                CustomTextField(
+                  textEditingController: priceController,
+                  hintText: "enter product price...",
+                  validator: (v) {
+                    if (v!.isEmpty) {
+                      return "should not be empty";
+                    }
+                    return null;
+                  },
+                ),
+                CustomTextField(
+                  textEditingController: discountPriceController,
+                  hintText: "enter product discount Price...",
+                  validator: (v) {
+                    if (v!.isEmpty) {
+                      return "should not be empty";
+                    }
+                    return null;
+                  },
+                ),
+                CustomTextField(
+                  textEditingController: serialCodeController,
+                  hintText: "enter product serial code...",
+                  validator: (v) {
+                    if (v!.isEmpty) {
+                      return "should not be empty";
+                    }
+                    return null;
+                  },
+                ),
+                CustomTextField(
+                  textEditingController: brandController,
+                  hintText: "enter product brand...",
+                  validator: (v) {
+                    if (v!.isEmpty) {
+                      return "should not be empty";
+                    }
+                    return null;
+                  },
+                ),
+
+                ElevatedButton(
+                  child: Text("PICK IMAGES"),
+                  onPressed: () {
+                    pickImage();
+                  },
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: ScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 5,
+                    ),
+                    itemCount: images.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Stack(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black),
+                              ),
+                              child: File(images[index].path).path.isEmpty
+                                  ? ElevatedButton(
+                                      child: Text("PICK IMAGES"),
+                                      onPressed: () {
+                                        pickImage();
+                                      },
+                                    )
+                                  : Image.network(
+                                      File(images[index].path).path,
+                                      height: 200,
+                                      width: 200,
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  images.removeAt(index);
+                                });
+                              },
+                              icon: const Icon(Icons.cancel_outlined),
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+                SwitchListTile(
+                  title: Text(
+                    isOnSale == false
+                        ? 'Is this Product on Sale?'
+                        : 'Is ON SALE',
+                  ),
+                  value: isOnSale,
+                  onChanged: (v) {
+                    setState(() {
+                      isOnSale = !isOnSale;
+                    });
+                  },
+                ),
+                SwitchListTile(
+                  title: Text(
+                    isPopular == false
+                        ? 'Is this Product Popular?'
+                        : 'is POPULAR',
+                  ),
+                  value: isPopular,
+                  onChanged: (v) {
+                    setState(() {
+                      isPopular = !isPopular;
+                    });
+                  },
+                ),
+                ElevatedButton(
+                  child: Text("SAVE"),
+                  onPressed: () {
+                    _saveProductsMethod();
+                  },
                 ),
               ],
             ),
-          );
-        });
-  }
-
-  Future<void> _pickFromCamera() async {
-    Navigator.pop(context);
-    try {
-      final XFile? pickedImage = await ImagePicker()
-          .pickImage(source: ImageSource.camera, imageQuality: 100);
-      if (pickedImage != null) {
-        setState(() {
-          _pickedImage = File(pickedImage.path);
-        });
-        Fluttertoast.showToast(msg: 'Image Picked From Camera');
-      }
-    } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
-    }
-  }
-
-  Future<void> _pickFromGallery() async {
-    Navigator.pop(context);
-    try {
-      final XFile? pickedImage = await ImagePicker()
-          .pickImage(source: ImageSource.gallery, imageQuality: 100);
-      if (pickedImage != null) {
-        setState(() {
-          _pickedImage = File(pickedImage.path);
-        });
-        Fluttertoast.showToast(msg: 'Image Picked From Gallery');
-      }
-    } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
-    }
-  }
-
-  Future<void> _uploadImage() async {
-    try {
-      if (_pickedImage == null) {
-        Fluttertoast.showToast(msg: 'No image selected');
-        return;
-      }
-
-      String imageName = DateTime.now().millisecondsSinceEpoch.toString();
-
-      Reference ref =
-          FirebaseStorage.instance.ref().child('images/$imageName.jpg');
-
-      await ref.putFile(_pickedImage!).then((taskSnapshot) async {
-        String imageUrl = await taskSnapshot.ref.getDownloadURL();
-
-        await FirebaseFirestore.instance.collection('products').add(
-              ProductModel(
-                id: _idController.text,
-                name: _nameController.text,
-                description: _descriptionController.text,
-                price: double.parse(_priceController.text),
-                imageUrl: imageUrl,
-              ).toJson(),
-            );
-
-        Fluttertoast.showToast(msg: 'Image uploaded successfully');
-      });
-    } catch (e) {
-      Fluttertoast.showToast(msg: 'Error uploading image: $e');
-    }
-  }
-
-  Widget sizedbox() {
-    return const SizedBox(
-      height: 20,
+          ),
+        ),
+      )),
     );
   }
+
+  _saveProductsMethod() async {
+    setState(() {
+      isSaving = true;
+    });
+    await uploadImages();
+    await FirebaseFirestore.instance
+        .collection('products')
+        .add(
+          ProductModel(
+            category: selectedCategory,
+            id: uuid.v4(),
+            productName: productNameController.text,
+            productDescription: productDescriptionController.text,
+            price: int.parse(priceController.text),
+            brand: brandController.text,
+            discountPrice: int.parse(discountPriceController.text),
+            serialCode: serialCodeController.text,
+            imageUrls: imageUrls,
+            isSale: isOnSale,
+            isPopular: isPopular,
+          ).toJson(),
+        )
+        .whenComplete(() {
+      setState(() {
+        isSaving = false;
+        imageUrls.clear();
+        images.clear();
+        clearFields();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Added Successfully")),
+        );
+      });
+    });
+  }
+
+  clearFields() {
+    setState(() {
+      categoryController.clear();
+      idController.clear();
+      productNameController.clear();
+      productDescriptionController.clear();
+      brandController.clear();
+      priceController.clear();
+      discountPriceController.clear();
+      serialCodeController.clear();
+    });
+  }
+
+  pickImage() async {
+    final List<XFile>? pickImage = await imagePicker.pickMultiImage();
+    if (pickImage != null) {
+      setState(() {
+        images.addAll(pickImage);
+      });
+    } else {
+      print("no images selected");
+    }
+  }
+
+  Future postImages(XFile? imageFile) async {
+    setState(() {
+      isUploading = true;
+    });
+    String? urls;
+    Reference ref =
+        FirebaseStorage.instance.ref().child("images").child(imageFile!.name);
+    if (kIsWeb) {
+      await ref.putData(
+        await imageFile.readAsBytes(),
+        SettableMetadata(contentType: "image/jpeg"),
+      );
+      urls = await ref.getDownloadURL();
+      setState(() {
+        isUploading = false;
+      });
+      return urls;
+    }
+  }
+
+  uploadImages() async {
+    for (var image in images) {
+      await postImages(image).then(
+        (downLoadUrl) => imageUrls.add(downLoadUrl),
+      );
+    }
+  }
 }
-
-
-// import 'dart:io';
-// import 'dart:ui';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_storage/firebase_storage.dart';
-// import 'package:flutter/material.dart';
-// import 'package:fluttertoast/fluttertoast.dart';
-// import 'package:image_picker/image_picker.dart';
-// import 'package:shopbiz_app/constants/constants.dart';
-// import 'package:shopbiz_app/screens/home/home_screen.dart';
-// import 'package:shopbiz_app/widgets/custom_button.dart';
-// import 'package:shopbiz_app/widgets/custom_text_field.dart';
-
-// class AddProductScreen extends StatefulWidget {
-//   final String? getId;
-//   final String? getName;
-//   final String? getDescription;
-//   final String? getPrice;
-
-//   const AddProductScreen({
-//     Key? key,
-//     this.getId,
-//     this.getName,
-//     this.getDescription,
-//     this.getPrice,
-//   }) : super(
-//           key: key,
-//         );
-
-//   @override
-//   State<AddProductScreen> createState() => _AddProductScreenState();
-// }
-
-// class _AddProductScreenState extends State<AddProductScreen> {
-//   ///controllers
-//   final TextEditingController _idController = TextEditingController();
-//   final TextEditingController _nameController = TextEditingController();
-//   final TextEditingController _descriptionController = TextEditingController();
-//   final TextEditingController _priceController = TextEditingController();
-
-//   ///globaly key
-//   var globalkey = GlobalKey<FormState>();
-
-//   ///global for picked image
-//   File? _pickedImage;
-
-//   ///add Products Function
-//   Future<void> addProducts() async {
-//     try {
-//       if (globalkey.currentState!.validate()) {
-//         await _uploadImage();
-//         Fluttertoast.showToast(msg: 'Product Added Successfully');
-//         Navigator.push(
-//           context,
-//           MaterialPageRoute(
-//             builder: (_) => const HomeScreen(),
-//           ),
-//         );
-//       }
-//     } catch (e) {
-//       Fluttertoast.showToast(msg: e.toString());
-//     }
-//   }
-
-//   @override
-//   void dispose() {
-//     _idController.dispose();
-//     _nameController.dispose();
-//     _descriptionController.dispose();
-//     _priceController.dispose();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final Size size = MediaQuery.of(context).size;
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Add Product'),
-//       ),
-//       body: SizedBox(
-//         height: size.height,
-//         width: size.width,
-//         child: Center(
-//           child: BackdropFilter(
-//             filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-//             child: Form(
-//               key: globalkey,
-//               child: Container(
-//                 height: size.height * 0.90,
-//                 width: size.width,
-//                 child: Padding(
-//                   padding: const EdgeInsets.all(10.0),
-//                   child: SingleChildScrollView(
-//                     child: Column(
-//                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                       children: [
-//                         ///logo
-//                         Container(
-//                           child: const CircleAvatar(
-//                             radius: 100,
-//                             backgroundImage:
-//                                 AssetImage('assets/images/e_commerce_logo.png'),
-//                           ),
-//                         ),
-//                         sizedbox(),
-
-//                         ///
-//                         CustomTextField(
-//                           textEditingController: _idController,
-//                           prefixIcon: Icons.numbers_outlined,
-//                           hintText: 'Enter Product ID',
-//                           validator: (v) {
-//                             if (v!.isEmpty) {
-//                               return 'Field Should not be Empty';
-//                             } else {
-//                               return null;
-//                             }
-//                           },
-//                         ),
-//                         sizedbox(),
-//                         CustomTextField(
-//                           textEditingController: _nameController,
-//                           prefixIcon: Icons.production_quantity_limits_outlined,
-//                           hintText: 'Enter Product Name',
-//                           validator: (v) {
-//                             if (v!.isEmpty) {
-//                               return 'Field Should not be Empty';
-//                             } else {
-//                               return null;
-//                             }
-//                           },
-//                         ),
-//                         sizedbox(),
-
-//                         CustomTextField(
-//                           textEditingController: _descriptionController,
-//                           prefixIcon: Icons.production_quantity_limits_outlined,
-//                           hintText: 'Enter Product Description',
-//                           validator: (v) {
-//                             if (v!.isEmpty) {
-//                               return 'Field Should not be Empty';
-//                             } else {
-//                               return null;
-//                             }
-//                           },
-//                         ),
-//                         sizedbox(),
-
-//                         CustomTextField(
-//                           textEditingController: _priceController,
-//                           prefixIcon: Icons.production_quantity_limits_outlined,
-//                           hintText: 'Enter Product Price',
-//                           validator: (v) {
-//                             if (v!.isEmpty) {
-//                               return 'Field Should not be Empty';
-//                             } else {
-//                               return null;
-//                             }
-//                           },
-//                         ),
-//                         sizedbox(),
-
-//                         ///Add Section to pick and upload images.
-//                         Container(
-//                           height: 200,
-//                           width: size.width,
-//                           decoration: BoxDecoration(
-//                             color: Colors.grey.withOpacity(0.2),
-//                             border: Border.all(),
-//                             borderRadius: BorderRadius.circular(10),
-//                           ),
-//                           child: _pickedImage != null
-//                               ? Image.file(
-//                                   _pickedImage!,
-//                                   height: 100,
-//                                   width: 100,
-//                                 )
-//                               : IconButton(
-//                                   onPressed: () {
-//                                     _showModalBottomSheetSuggestions();
-//                                   },
-//                                   icon: Icon(Icons.image_outlined),
-//                                 ),
-//                         ),
-
-//                         sizedbox(),
-
-//                         CustomButton(
-//                           title: 'Add Product',
-//                           onPressed: () async {
-//                             await addProducts();
-//                           },
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   void _showModalBottomSheetSuggestions() {
-//     showModalBottomSheet(
-//         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-//         context: context,
-//         builder: (BuildContext context) {
-//           return Container(
-//             child: Wrap(
-//               children: [
-//                 ListTile(
-//                   leading: const Icon(Icons.camera_alt_outlined),
-//                   title: const Text('Pick From Camera'),
-//                   onTap: () => {_pickFromCamera()},
-//                 ),
-//                 ListTile(
-//                   leading: const Icon(Icons.image_search_outlined),
-//                   title: const Text('Pick From Gallery'),
-//                   onTap: () => {_pickFromGallery()},
-//                 ),
-//               ],
-//             ),
-//           );
-//         });
-//   }
-
-//   Future<void> _pickFromCamera() async {
-//     Navigator.pop(context);
-//     try {
-//       final XFile? pickedImage = await ImagePicker()
-//           .pickImage(source: ImageSource.camera, imageQuality: 100);
-//       if (pickedImage != null) {
-//         setState(() {
-//           _pickedImage = File(pickedImage.path);
-//         });
-//         Fluttertoast.showToast(msg: 'Image Picked From Camera');
-//       }
-//     } catch (e) {
-//       Fluttertoast.showToast(msg: e.toString());
-//     }
-//   }
-
-//   Future<void> _pickFromGallery() async {
-//     Navigator.pop(context);
-//     try {
-//       final XFile? pickedImage = await ImagePicker()
-//           .pickImage(source: ImageSource.gallery, imageQuality: 100);
-//       if (pickedImage != null) {
-//         setState(() {
-//           _pickedImage = File(pickedImage.path);
-//         });
-//         Fluttertoast.showToast(msg: 'Image Picked From Gellery');
-//       }
-//     } catch (e) {
-//       Fluttertoast.showToast(msg: e.toString());
-//     }
-//   }
-
-//   Future<void> _uploadImage() async {
-//     try {
-//       if (_pickedImage == null) {
-//         Fluttertoast.showToast(msg: 'No image selected');
-//         return;
-//       }
-
-//       String imageName = DateTime.now().millisecondsSinceEpoch.toString();
-
-//       Reference ref =
-//           FirebaseStorage.instance.ref().child('images/$imageName.jpg');
-
-//       await ref.putFile(_pickedImage!).then((taskSnapshot) async {
-//         String imageUrl = await taskSnapshot.ref.getDownloadURL();
-
-//         // Add other product fields along with the imageUrl to the Firestore document
-//         await FirebaseFirestore.instance.collection('products').add({
-//           'id': _idController.text,
-//           'name': _nameController.text,
-//           'description': _descriptionController.text,
-//           'price': _priceController.text,
-//           'imageUrl': imageUrl,
-//         });
-
-//         // Now you can save the imageUrl to Firestore or use it as needed
-//         Fluttertoast.showToast(msg: 'Image uploaded successfully');
-//       });
-//     } catch (e) {
-//       Fluttertoast.showToast(msg: 'Error uploading image: $e');
-//     }
-//   }
-// }

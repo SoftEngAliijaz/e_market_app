@@ -6,10 +6,10 @@ class Pridy extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pridy'),
+        title: Text('products'),
       ),
       body: Center(
-        child: Text('Pridy'),
+        child: Text('products'),
       ),
     );
   }

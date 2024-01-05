@@ -16,13 +16,34 @@ class AdminDashBoardDrawer extends StatelessWidget {
       child: ListView(
         children: [
           DrawerHeader(
-            child: Container(),
+            padding: const EdgeInsets.all(0.0),
+            child: Container(
+              color: Theme.of(context).primaryColor,
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Icon(
+                      Icons.admin_panel_settings,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Center(
+                      child: Text(
+                    'Welcome Admin',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  )),
+                ],
+              ),
+            ),
           ),
 
           /// Admin dashboard tile
           _listTileComponent(context, () {
             Navigator.push(context, MaterialPageRoute(builder: (_) {
-              return AdminDashBoard();
+              return const AdminDashBoard();
             }));
           }, Icons.home, 'Admin Dashboard'),
 
@@ -36,23 +57,30 @@ class AdminDashBoardDrawer extends StatelessWidget {
           /// Update Product tile
           _listTileComponent(context, () {
             Navigator.push(context, MaterialPageRoute(builder: (_) {
-              return UpdateProductScreen();
+              return const UpdateProductScreen();
             }));
           }, Icons.update, 'Update Product'),
 
           /// Delete Product tile
           _listTileComponent(context, () {
             Navigator.push(context, MaterialPageRoute(builder: (_) {
-              return DeleteProductScreen();
+              return const DeleteProductScreen();
             }));
           }, Icons.delete, 'Delete Product'),
 
           /// View Product tile
           _listTileComponent(context, () {
             Navigator.push(context, MaterialPageRoute(builder: (_) {
-              return ViewProductScreen();
+              return const ViewProductScreen();
             }));
           }, Icons.view_agenda, 'View Product'),
+
+          /// View all admins tile
+          _listTileComponent(context, () {
+            Navigator.push(context, MaterialPageRoute(builder: (_) {
+              return const ViewAllAdminScreen();
+            }));
+          }, Icons.admin_panel_settings, 'View All Admins'),
 
           /// Logout tile
           _listTileComponent(context, () {
@@ -61,13 +89,6 @@ class AdminDashBoardDrawer extends StatelessWidget {
               return const LogInScreen();
             }), (route) => false);
           }, Icons.logout, 'Logout'),
-
-          /// View all admins tile
-          _listTileComponent(context, () {
-            Navigator.push(context, MaterialPageRoute(builder: (_) {
-              return ViewAllAdminScreen();
-            }));
-          }, Icons.admin_panel_settings, 'View All Admins'),
         ],
       ),
     );

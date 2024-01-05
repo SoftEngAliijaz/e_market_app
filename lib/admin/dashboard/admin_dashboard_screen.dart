@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/components/admin_dash_board_drawer.dart';
 import 'package:e_market_app/components/carousel_slider_component.dart';
+import 'package:e_market_app/constants/constants.dart';
 import 'package:e_market_app/models/ui_models/grid_view_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AdminDashBoard extends StatelessWidget {
@@ -17,6 +19,7 @@ class AdminDashBoard extends StatelessWidget {
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('admins')
+            .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
             .where('userType', isEqualTo: 'admin')
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -25,8 +28,7 @@ class AdminDashBoard extends StatelessWidget {
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            // Loading indicator
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: AppUtils.customProgressIndicator());
           }
 
           // If there is no data, display a message
@@ -64,9 +66,13 @@ class AdminDashBoard extends StatelessWidget {
   Widget _buildCarouselDividerAndGrid() {
     return Column(
       children: [
+        ///carouselSliderMethod
         carouselSliderMethod(),
+
+        ///Divider
         const Divider(),
-        // Grid view & Listview
+
+        /// Grid view & Listview
         GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -77,23 +83,33 @@ class AdminDashBoard extends StatelessWidget {
             crossAxisSpacing: 5,
           ),
           itemBuilder: (BuildContext context, int index) {
+            ///color values
             final colorValue = GridViewModelColors.gridViewModelCardColors[
                 index % GridViewModelColors.gridViewModelCardColors.length];
-            final value = gridModel[index].title?.toString() ?? '';
+
+            ///grid values
+            final textValue = gridModel[index].title?.toString() ?? '';
 
             return InkWell(
               onTap: () {
-                GridViewRoutes.navigateToScreen(context, value);
+                GridViewRoutes.navigateToScreen(context, textValue);
               },
               child: Card(
                 color: colorValue,
                 child: Center(
-                  child: Text(
-                    value,
-                    style: const TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: Text(
+                          textValue,
+                          style: const TextStyle(
+                            decoration: TextDecoration.underline,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

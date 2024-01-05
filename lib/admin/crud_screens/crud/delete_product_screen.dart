@@ -47,6 +47,7 @@ class DeleteProductScreen extends StatelessWidget {
                         showDialog(
                           context: context,
                           builder: (_) {
+                            final delInfo = productData['name'];
                             return AlertDialog(
                               title: Text('Are You Sure?'),
                               content:
@@ -66,8 +67,7 @@ class DeleteProductScreen extends StatelessWidget {
                                           () => Navigator.pop(context),
                                         )
                                         .then((value) => Fluttertoast.showToast(
-                                            msg:
-                                                'Deleted ${productData['name']}'));
+                                            msg: 'Deleted: $delInfo'));
                                   },
                                   child: const Text("Yes"),
                                 ),

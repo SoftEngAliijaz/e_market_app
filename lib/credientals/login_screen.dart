@@ -70,15 +70,12 @@ class _LogInScreenState extends State<LogInScreen> {
           errorMessage = 'No user found for that email';
         } else if (e.code == 'wrong-password') {
           errorMessage = 'Wrong password provided';
+        } else {
+          Fluttertoast.showToast(msg: errorMessage);
         }
         Fluttertoast.showToast(msg: errorMessage);
       } catch (e) {
-        print("error: ${e.toString()}");
         Fluttertoast.showToast(msg: e.toString());
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
       }
     }
   }
@@ -135,7 +132,7 @@ class _LogInScreenState extends State<LogInScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           const Text(
-                            'WELCOME To\nE-Market App',
+                            'Welcome to\nE-Market App',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 20.0,
@@ -157,9 +154,7 @@ class _LogInScreenState extends State<LogInScreen> {
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return 'Email should not be empty';
-                              } else if (!RegExp(
-                                      r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$')
-                                  .hasMatch(value)) {
+                              } else if (!_regExp().hasMatch(value)) {
                                 return 'Enter a valid email address';
                               }
                               return null;
@@ -210,7 +205,7 @@ class _LogInScreenState extends State<LogInScreen> {
                                 : () {
                                     _loginCredentials();
                                   },
-                            child: Text('LOGIN'),
+                            child: const Text('LOGIN'),
                           ),
                         ],
                       ),
@@ -222,6 +217,12 @@ class _LogInScreenState extends State<LogInScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  RegExp _regExp() {
+    return RegExp(
+      r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$',
     );
   }
 }

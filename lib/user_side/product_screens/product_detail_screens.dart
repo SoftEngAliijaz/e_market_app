@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_market_app/user_side/product_screens/product_cart_screen.dart';
-import 'package:e_market_app/user_side/product_screens/product_fav_screen.dart';
 import 'package:e_market_app/models/product_model/product_model.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +16,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.product?.name ?? 'Product Detail'),
+        title: Text(widget.product?.productName ?? 'Product Detail'),
       ),
       bottomNavigationBar: SizedBox(
         child: Row(
@@ -28,16 +26,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 style: TextButton.styleFrom(
                   shape:
                       RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                  backgroundColor:
-                      widget.product!.isInCart ? Colors.grey : Colors.blue,
+                  backgroundColor: (widget.product?.isInCart == true)
+                      ? Colors.grey
+                      : Colors.blue,
                   iconColor: Colors.red,
                 ),
                 onPressed: _toggleCart,
                 icon: Icon(
-                  widget.product!.isInCart ? Icons.check : Icons.add,
+                  (widget.product?.isInCart == true) ? Icons.check : Icons.add,
                 ),
                 label: Text(
-                  widget.product!.isInCart ? 'In Cart' : 'Add to Cart',
+                  (widget.product?.isInCart == true)
+                      ? 'In Cart'
+                      : 'Add to Cart',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -47,18 +48,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 style: TextButton.styleFrom(
                   shape:
                       RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                  backgroundColor:
-                      widget.product!.isInFavorite ? Colors.red : Colors.blue,
+                  backgroundColor: (widget.product?.isInFavorite == true)
+                      ? Colors.red
+                      : Colors.blue,
                   iconColor: Colors.white,
                 ),
                 onPressed: _toggleFavorite,
                 icon: Icon(
-                  widget.product!.isInFavorite
+                  (widget.product?.isInFavorite == true)
                       ? Icons.favorite
                       : Icons.favorite_border,
                 ),
                 label: Text(
-                  widget.product!.isInFavorite
+                  (widget.product?.isInFavorite == true)
                       ? 'In Favorites'
                       : 'Add to Favorites',
                   style: TextStyle(color: Colors.white),
@@ -76,7 +78,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               width: double.infinity,
               child: Center(
                 child: Image.network(
-                  widget.product?.imageUrl ?? '',
+                  widget.product?.imageUrls?.first ?? '',
                   fit: BoxFit.contain,
                   width: double.infinity,
                 ),
@@ -86,9 +88,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               leading: CircleAvatar(
                 child: Text(widget.product?.id ?? 'N/A'),
               ),
-              title: Text(widget.product?.name ?? 'N/A'),
-              subtitle: Text(widget.product?.description ?? 'N/A'),
-              trailing: Text(widget.product?.price.toString() ?? 'N/A'),
+              title: Text(widget.product?.productName ?? 'N/A'),
+              subtitle: Text(widget.product?.productDescription ?? 'N/A'),
+              trailing: Text(widget.product?.price?.toString() ?? 'N/A'),
             ),
           ],
         ),
@@ -97,57 +99,57 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   void _toggleCart() async {
-    // Toggle the isInCart property
-    setState(() {
-      widget.product!.isInCart = !widget.product!.isInCart;
-    });
-
-    // Add or remove the product from the cart collection in Firestore
-    final cartReference = FirebaseFirestore.instance.collection('cart');
-
-    if (widget.product!.isInCart) {
-      // Add to cart
-      await cartReference.doc(widget.product!.id).set({
-        'id': widget.product!.id,
-        'name': widget.product!.name,
-        'description': widget.product!.description,
-        'price': widget.product!.price,
-        'image': widget.product!.imageUrl,
+    if (widget.product != null) {
+      // Toggle the isInCart property
+      setState(() {
+        widget.product!.isInCart = !(widget.product!.isInCart ?? false);
       });
-      Navigator.push(context, MaterialPageRoute(builder: (_) {
-        return ProductCartScreen();
-      }));
-    } else {
-      // Remove from cart
-      await cartReference.doc(widget.product!.id).delete();
+
+      // Add or remove the product from the cart collection in Firestore
+      final cartReference = FirebaseFirestore.instance.collection('cart');
+
+      if (widget.product!.isInCart == true) {
+        // Add to cart
+        await cartReference.doc(widget.product!.id).set({
+          'id': widget.product!.id,
+          'productName': widget.product!.productName,
+          'productDescription': widget.product!.productDescription,
+          'price': widget.product!.price,
+          'imageUrls': widget.product!.imageUrls,
+        });
+        Navigator.pop(context); // Go back to the previous screen
+      } else {
+        // Remove from cart
+        await cartReference.doc(widget.product!.id).delete();
+      }
     }
   }
 
   void _toggleFavorite() async {
-    // Toggle the isInFavorite property
-    setState(() {
-      widget.product!.isInFavorite = !widget.product!.isInFavorite;
-    });
-
-    // Add or remove the product from the favorites collection in Firestore
-    final favoritesReference =
-        FirebaseFirestore.instance.collection('favorites');
-
-    if (widget.product!.isInFavorite) {
-      // Add to favorites
-      await favoritesReference.doc(widget.product!.id).set({
-        'id': widget.product!.id,
-        'name': widget.product!.name,
-        'description': widget.product!.description,
-        'price': widget.product!.price,
-        'image': widget.product!.imageUrl,
+    if (widget.product != null) {
+      // Toggle the isInFavorite property
+      setState(() {
+        widget.product!.isInFavorite = !(widget.product!.isInFavorite ?? false);
       });
-      Navigator.push(context, MaterialPageRoute(builder: (_) {
-        return ProductFavScreen();
-      }));
-    } else {
-      // Remove from favorites
-      await favoritesReference.doc(widget.product!.id).delete();
+
+      // Add or remove the product from the favorites collection in Firestore
+      final favoritesReference =
+          FirebaseFirestore.instance.collection('favorites');
+
+      if (widget.product!.isInFavorite == true) {
+        // Add to favorites
+        await favoritesReference.doc(widget.product!.id).set({
+          'id': widget.product!.id,
+          'productName': widget.product!.productName,
+          'productDescription': widget.product!.productDescription,
+          'price': widget.product!.price,
+          'imageUrls': widget.product!.imageUrls,
+        });
+        Navigator.pop(context); // Go back to the previous screen
+      } else {
+        // Remove from favorites
+        await favoritesReference.doc(widget.product!.id).delete();
+      }
     }
   }
 }

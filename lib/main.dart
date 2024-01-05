@@ -1,4 +1,4 @@
-import 'package:e_market_app/user_activity_cycle/user_activity_cycle.dart';
+import 'package:e_market_app/admin/crud_screens/crud/add_product_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
       ),
 
       // Set the initial screen of the app to UserActivityCycleScreen
-      home: const UserActivityCycleScreen(),
+      home: AddProductScreen(),
     );
   }
 }

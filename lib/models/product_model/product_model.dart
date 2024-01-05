@@ -1,77 +1,67 @@
 class ProductModel {
-  final String id;
-  final String name;
-  final String description;
-  final double price;
-  final String? imageUrl;
-  bool isInCart; // Existing property
-  bool isInFavorite; // New property
+  String? category;
+  String? id;
+  String? productName;
+  String? productDescription;
+  String? brand;
+  int? price;
+  int? discountPrice;
+  String? serialCode;
+  List<dynamic>? imageUrls;
+  bool? isSale;
+  bool? isPopular;
+  bool? isInCart;
+  bool? isInFavorite;
 
-  // Constructor
   ProductModel({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.price,
-    this.imageUrl,
-    this.isInCart = false, // Default value
-    this.isInFavorite = false, // Default value
+    this.category,
+    this.id,
+    this.productName,
+    this.productDescription,
+    this.price,
+    this.brand,
+    this.discountPrice,
+    this.serialCode,
+    this.imageUrls,
+    this.isSale,
+    this.isPopular,
+    this.isInCart,
+    this.isInFavorite,
   });
 
-  // Factory method to create an instance from a map (e.g., from JSON)
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
-      description: json['description'] ?? '',
-      price: (json['price'] as num?)?.toDouble() ?? 0.0,
-      imageUrl: json['imageUrl'] ?? '',
-      isInCart: json['isInCart'] ?? false, // Existing property
-      isInFavorite: json['isInFavorite'] ?? false, // New property
+      category: json['category'],
+      id: json['id'],
+      productName: json['productName'],
+      productDescription: json['productDescription'],
+      price: json['price'],
+      brand: json['brand'],
+      discountPrice: json['discountPrice'],
+      serialCode: json['serialCode'],
+      imageUrls: json['imageUrls'],
+      isSale: json['isSale'],
+      isPopular: json['isPopular'],
+      isInCart: json['isInCart'],
+      isInFavorite: json['isInFavorite'],
     );
   }
 
-  // Convert the productModel to a map (e.g., for JSON serialization)
   Map<String, dynamic> toJson() {
     return {
+      'category': category,
       'id': id,
-      'name': name,
-      'description': description,
+      'productName': productName,
+      'productDescription': productDescription,
       'price': price,
-      'imageUrl': imageUrl,
-      'isInCart': isInCart, // Existing property
-      'isInFavorite': isInFavorite, // New property
+      'brand': brand,
+      'discountPrice': discountPrice,
+      'serialCode': serialCode,
+      'imageUrls': imageUrls,
+      'isSale': isSale,
+      'isPopular': isPopular,
+      'isInCart': isInCart,
+      'isInFavorite': isInFavorite,
     };
   }
-
-  // Override toString for better debugging
-  @override
-  String toString() {
-    return 'ProductModel(id: $id, name: $name, description: $description, price: $price, imageUrl: $imageUrl, isInCart: $isInCart, isInFavorite: $isInFavorite)';
-  }
-
-  // Override == for equality comparison
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ProductModel &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          name == other.name &&
-          description == other.description &&
-          price == other.price &&
-          imageUrl == other.imageUrl &&
-          isInCart == other.isInCart &&
-          isInFavorite == other.isInFavorite;
-
-  // Override hashCode for consistency with ==
-  @override
-  int get hashCode =>
-      id.hashCode ^
-      name.hashCode ^
-      description.hashCode ^
-      price.hashCode ^
-      imageUrl.hashCode ^
-      isInCart.hashCode ^
-      isInFavorite.hashCode;
 }

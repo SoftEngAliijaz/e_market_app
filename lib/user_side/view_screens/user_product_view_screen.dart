@@ -6,13 +6,14 @@ import 'package:flutter/material.dart';
 
 class UserProductViewScreen extends StatelessWidget {
   const UserProductViewScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('UserProductViewScreen'),
+        title: const Text('User Product View Screen'),
       ),
-      body: StreamBuilder(
+      body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('products').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.active ||
@@ -24,18 +25,16 @@ class UserProductViewScreen extends StatelessWidget {
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (BuildContext context, int index) {
                   final productData = snapshot.data!.docs[index];
+                  final product = ProductModel.fromJson(
+                      productData.data() as Map<String, dynamic>);
 
                   return InkWell(
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(builder: (_) {
-                        return ProductDetailScreen(
-                          product: ProductModel.fromJson(
-                              productData.data() as Map<String, dynamic>),
-                        );
+                        return ProductDetailScreen(product: product);
                       }));
                     },
-                    child: _productCard(ProductModel.fromJson(
-                        productData.data() as Map<String, dynamic>)),
+                    child: _productCard(product),
                   );
                 },
                 separatorBuilder: (context, index) {
@@ -63,7 +62,8 @@ class UserProductViewScreen extends StatelessWidget {
               child: Container(
                 color: Colors.white,
                 child: Image.network(
-                  product.imageUrl!,
+                  product.imageUrls![0] ??
+                      '', // Use a default value or handle null case
                   fit: BoxFit.contain,
                   width: double.infinity,
                 ),
@@ -75,13 +75,13 @@ class UserProductViewScreen extends StatelessWidget {
               leading: CircleAvatar(
                 child: Center(
                   child: Text(
-                    product.id,
+                    product.id!,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
-              title: Text(product.name),
-              subtitle: Text(product.description),
+              title: Text(product.productName ?? ''),
+              subtitle: Text(product.productDescription ?? ''),
               trailing: Text("Price: ${product.price}"),
             ),
           ],

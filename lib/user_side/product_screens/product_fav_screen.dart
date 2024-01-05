@@ -10,49 +10,50 @@ class ProductFavScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Fav Products'),
-        ),
-        body: StreamBuilder<QuerySnapshot>(
-          stream:
-              FirebaseFirestore.instance.collection('favorites').snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              // Loading indicator while data is being fetched
-              return Center(child: AppUtils.customProgressIndicator());
-            }
+      appBar: AppBar(
+        title: Text('Favorite Products'),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection('favorites').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // Loading indicator while data is being fetched
+            return Center(child: AppUtils.customProgressIndicator());
+          }
 
-            if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            }
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
 
-            // Check if there are no documents in the collection
-            if (snapshot.data?.docs.isEmpty ?? true) {
-              return const Center(
-                  child: Text('No favorite products available.'));
-            }
+          // Check if there are no documents in the collection
+          final favoriteProducts = snapshot.data?.docs
+              .map((doc) =>
+                  ProductModel.fromJson(doc.data() as Map<String, dynamic>))
+              .toList();
 
-            // Extract the list of products from the snapshot
-            List<ProductModel> favoriteProducts = snapshot.data!.docs
-                .map((doc) =>
-                    ProductModel.fromJson(doc.data() as Map<String, dynamic>))
-                .toList();
+          if (favoriteProducts == null || favoriteProducts.isEmpty) {
+            return const Center(child: Text('No favorite products available.'));
+          }
 
-            return ListView.builder(
-              itemCount: favoriteProducts.length,
-              itemBuilder: (context, index) {
-                final value = favoriteProducts[index];
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage:
-                        CachedNetworkImageProvider(value.imageUrl!),
-                  ),
-                  title: Text(value.name),
-                  subtitle: Text(value.description),
-                );
-              },
-            );
-          },
-        ));
+          return ListView.builder(
+            itemCount: favoriteProducts.length,
+            itemBuilder: (context, index) {
+              final product = favoriteProducts[index];
+              // Use the first image URL if available
+              final imageUrl = product.imageUrls?.isNotEmpty ?? false
+                  ? product.imageUrls![0]
+                  : ''; // You might want to provide a default URL or handle this case differently
+              return ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: CachedNetworkImageProvider(imageUrl),
+                ),
+                title: Text(product.productName ?? ''),
+                subtitle: Text(product.productDescription ?? ''),
+              );
+            },
+          );
+        },
+      ),
+    );
   }
 }

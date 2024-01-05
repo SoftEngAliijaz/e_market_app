@@ -10,57 +10,53 @@ class ViewAllAdminScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('View All Admins'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: AdminListView(),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('admins')
+            .where('userType', isEqualTo: 'admin')
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // Loading indicator
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          // If there is no data, display a message
+          if (snapshot.data?.docs.isEmpty ?? true) {
+            return const Center(
+              child: Text('No admin users found'),
+            );
+          }
+
+          // If there is data, build a list of cards
+          final List<Widget> adminWidgets =
+              snapshot.data!.docs.map((DocumentSnapshot document) {
+            // Access the data in each document
+            Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+
+            // Customize this part based on your data structure
+            return ListTile(
+              leading: const Icon(Icons.admin_panel_settings_outlined),
+              title: Text("Welcome: ${data['displayName'] ?? ''}"),
+              subtitle: Text("Email: ${data['email'] ?? ''}"),
+            );
+          }).toList();
+
+          return ListView(
+            children: [
+              ...adminWidgets,
+            ],
+          );
+        },
       ),
     );
   }
-}
 
-class AdminListView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('admins').snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.connectionState == ConnectionState.active ||
-            snapshot.hasData) {
-          if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text('No admins available'));
-          } else {
-            return ListView.builder(
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (BuildContext context, int index) {
-                final adminData = snapshot.data!.docs[index];
-
-                return AdminCard(
-                  adminName: adminData['name'] ?? 'Unknown',
-                  adminEmail: adminData['email'] ?? 'Unknown',
-                );
-              },
-            );
-          }
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
-      },
-    );
-  }
-}
-
-class AdminCard extends StatelessWidget {
-  final String adminName;
-  final String adminEmail;
-
-  const AdminCard({
-    Key? key,
-    required this.adminName,
-    required this.adminEmail,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
+  Widget profileCard(String adminName, String adminEmail) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: ListTile(
