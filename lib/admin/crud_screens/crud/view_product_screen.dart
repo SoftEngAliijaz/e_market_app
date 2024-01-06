@@ -26,8 +26,10 @@ class ViewProductScreen extends StatelessWidget {
                   final productData = snapshot.data!.docs[index];
 
                   return SizedBox(
-                    child: _productCard(ProductModel.fromJson(
-                        productData.data() as Map<String, dynamic>)),
+                    child: _productCard(
+                        context,
+                        ProductModel.fromJson(
+                            productData.data() as Map<String, dynamic>)),
                   );
                 },
                 separatorBuilder: (context, index) {
@@ -43,34 +45,56 @@ class ViewProductScreen extends StatelessWidget {
     );
   }
 
-  Card _productCard(ProductModel product) {
+  Widget _productCard(
+    BuildContext context,
+    ProductModel product,
+  ) {
+    final Size size = MediaQuery.of(context).size;
     return Card(
+      elevation: 5.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
       color: Colors.white,
       child: Container(
         height: 300,
-        width: 300,
+        width: size.width,
         child: Column(
           children: [
             Expanded(
               child: Container(
+                width: size.width,
                 color: Colors.white,
                 child: product.imageUrls != null &&
                         product.imageUrls!.isNotEmpty
-                    ? Image.network(
-                        product.imageUrls![0], // Assuming the first image URL
-                        fit: BoxFit.contain,
-                        width: double.infinity,
+                    ? SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: product.imageUrls!.map((imagesValue) {
+                            return Container(
+                                padding: EdgeInsets.all(5.0),
+                                child: Image.network(
+                                  imagesValue,
+                                  fit: BoxFit.contain,
+                                ));
+                          }).toList(),
+                        ),
                       )
+                    // ? Image.network(
+                    //     product.imageUrls![0], // Assuming the first image URL
+                    //     fit: BoxFit.contain,
+                    //     width: size.width,
+                    //   )
                     : Center(child: Text('No Image')),
               ),
             ),
-            Divider(),
             ListTile(
               tileColor: Colors.white,
               leading: CircleAvatar(
                 child: Center(
                   child: Text(
                     product.id!,
+                    textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),

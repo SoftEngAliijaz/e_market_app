@@ -7,11 +7,12 @@ class ProductModel {
   int? price;
   int? discountPrice;
   String? serialCode;
-  List<dynamic>? imageUrls;
+  List<String>? imageUrls;
   bool? isSale;
   bool? isPopular;
   bool? isInCart;
   bool? isInFavorite;
+  DateTime? createdAt;
 
   ProductModel({
     this.category,
@@ -27,6 +28,7 @@ class ProductModel {
     this.isPopular,
     this.isInCart,
     this.isInFavorite,
+    this.createdAt,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -39,11 +41,14 @@ class ProductModel {
       brand: json['brand'],
       discountPrice: json['discountPrice'],
       serialCode: json['serialCode'],
-      imageUrls: json['imageUrls'],
+      imageUrls: json['imageUrls']?.cast<String>(), // cast to List<String>
       isSale: json['isSale'],
       isPopular: json['isPopular'],
       isInCart: json['isInCart'],
       isInFavorite: json['isInFavorite'],
+      createdAt: json['createdAt'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(json['createdAt'])
+          : null,
     );
   }
 
@@ -62,6 +67,7 @@ class ProductModel {
       'isPopular': isPopular,
       'isInCart': isInCart,
       'isInFavorite': isInFavorite,
+      'createdAt': createdAt?.millisecondsSinceEpoch,
     };
   }
 }

@@ -55,7 +55,9 @@ class AdminDashBoard extends StatelessWidget {
           return ListView(
             children: [
               ...adminWidgets,
-              _buildCarouselDividerAndGrid(),
+              sizedbox(),
+              carouselSliderMethod(),
+              _buildGridViewItems(),
             ],
           );
         },
@@ -63,15 +65,9 @@ class AdminDashBoard extends StatelessWidget {
     );
   }
 
-  Widget _buildCarouselDividerAndGrid() {
+  Widget _buildGridViewItems() {
     return Column(
       children: [
-        ///carouselSliderMethod
-        carouselSliderMethod(),
-
-        ///Divider
-        const Divider(),
-
         /// Grid view & Listview
         GridView.builder(
           shrinkWrap: true,

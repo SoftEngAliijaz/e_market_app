@@ -1,14 +1,15 @@
-class Category {
+class CategoriesModel {
   String? title;
   String? image;
 
-  Category({required this.title, this.image});
+  CategoriesModel({required this.title, this.image});
 }
 
-List<Category> categories = [
-  Category(title: "GROCERY", image: 'assets/c_images/grocery.png'),
-  Category(title: "ELECTRONICES", image: 'assets/c_images/electronics.png'),
-  Category(title: "COSMETICS", image: 'assets/c_images/cosmatics.png'),
-  Category(title: "PHARMACY", image: 'assets/c_images/pharmacy.png'),
-  Category(title: "GARMENTS", image: 'assets/c_images/garments.png'),
+List<CategoriesModel> categories = [
+  CategoriesModel(title: "GROCERY", image: 'assets/c_images/grocery.png'),
+  CategoriesModel(
+      title: "ELECTRONICES", image: 'assets/c_images/electronics.png'),
+  CategoriesModel(title: "COSMETICS", image: 'assets/c_images/cosmatics.png'),
+  CategoriesModel(title: "PHARMACY", image: 'assets/c_images/pharmacy.png'),
+  CategoriesModel(title: "GARMENTS", image: 'assets/c_images/garments.png'),
 ];

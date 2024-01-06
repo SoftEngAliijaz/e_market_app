@@ -38,16 +38,20 @@ class DeleteProductScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(10.0),
                   child: ListTile(
                     leading: CircleAvatar(
-                      child: Center(child: Text(productData['id'])),
+                      child: Center(
+                          child: Text(
+                        productData['id'],
+                        overflow: TextOverflow.ellipsis,
+                      )),
                     ),
-                    title: Text(productData['name']),
-                    subtitle: Text(productData['description']),
+                    title: Text(productData['productName']),
+                    subtitle: Text(productData['productDescription']),
                     trailing: IconButton(
                       onPressed: () {
                         showDialog(
                           context: context,
                           builder: (_) {
-                            final delInfo = productData['name'];
+                            final delInfo = productData['productName'];
                             return AlertDialog(
                               title: Text('Are You Sure?'),
                               content:

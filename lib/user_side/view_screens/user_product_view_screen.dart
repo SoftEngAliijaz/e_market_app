@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_market_app/user_side/product_screens/product_detail_screens.dart';
 import 'package:e_market_app/constants/constants.dart';
 import 'package:e_market_app/models/product_model/product_model.dart';
+import 'package:e_market_app/user_side/product_screens/product_detail_screens.dart';
 import 'package:flutter/material.dart';
 
 class UserProductViewScreen extends StatelessWidget {
@@ -62,8 +62,8 @@ class UserProductViewScreen extends StatelessWidget {
               child: Container(
                 color: Colors.white,
                 child: Image.network(
-                  product.imageUrls![0] ??
-                      '', // Use a default value or handle null case
+                  product
+                      .imageUrls![0], // Use a default value or handle null case
                   fit: BoxFit.contain,
                   width: double.infinity,
                 ),

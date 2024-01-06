@@ -8,9 +8,14 @@ CarouselSlider carouselSliderMethod() {
   return CarouselSlider(
     items: carouselSliderModel.map((carouselModelValue) {
       return Card(
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
               fit: BoxFit.cover,
               image: CachedNetworkImageProvider(
@@ -21,7 +26,13 @@ CarouselSlider carouselSliderMethod() {
               alignment: Alignment.bottomLeft,
               child: Container(
                   width: double.infinity,
-                  color: Colors.black38,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10),
+                    ),
+                    color: Colors.black38,
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Text(

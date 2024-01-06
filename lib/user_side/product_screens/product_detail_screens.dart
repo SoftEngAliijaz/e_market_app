@@ -77,10 +77,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               height: 300,
               width: double.infinity,
               child: Center(
-                child: Image.network(
-                  widget.product?.imageUrls?.first ?? '',
-                  fit: BoxFit.contain,
-                  width: double.infinity,
+                child: Row(
+                  children: widget.product!.imageUrls!.map((imageUrlValues) {
+                    return Image.network(
+                      widget.product!.imageUrls!.length.toString(),
+                    );
+                  }).toList(),
+                  // child: Image.network(
+                  //   widget.product?.imageUrls?.first ?? '',
+                  //   fit: BoxFit.contain,
+                  //   width: double.infinity,
+                  // ),
                 ),
               ),
             ),
