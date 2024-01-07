@@ -58,7 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     radius: 100,
                                     backgroundImage: FileImage(_pickedImage!),
                                   )
-                                : user['photoURL'] != null
+                                : user['photoUrl'] != null
                                     ? CircleAvatar(
                                         radius: 100,
                                         backgroundImage:

@@ -25,11 +25,11 @@ class ViewProductScreen extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   final productData = snapshot.data!.docs[index];
 
-                  return SizedBox(
-                    child: _productCard(
-                        context,
-                        ProductModel.fromJson(
-                            productData.data() as Map<String, dynamic>)),
+                  return _productCard(
+                    context,
+                    ProductModel.fromJson(
+                      productData.data() as Map<String, dynamic>,
+                    ),
                   );
                 },
                 separatorBuilder: (context, index) {
@@ -61,47 +61,36 @@ class ViewProductScreen extends StatelessWidget {
         width: size.width,
         child: Column(
           children: [
-            Expanded(
-              child: Container(
-                width: size.width,
-                color: Colors.white,
-                child: product.imageUrls != null &&
-                        product.imageUrls!.isNotEmpty
-                    ? SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: product.imageUrls!.map((imagesValue) {
-                            return Container(
-                                padding: EdgeInsets.all(5.0),
-                                child: Image.network(
-                                  imagesValue,
-                                  fit: BoxFit.contain,
-                                ));
-                          }).toList(),
-                        ),
-                      )
-                    // ? Image.network(
-                    //     product.imageUrls![0], // Assuming the first image URL
-                    //     fit: BoxFit.contain,
-                    //     width: size.width,
-                    //   )
-                    : Center(child: Text('No Image')),
+            if (product.imageUrls != null && product.imageUrls!.isNotEmpty)
+              Expanded(
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: product.imageUrls!.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      padding: EdgeInsets.all(5.0),
+                      child: Image.network(
+                        product.imageUrls![index],
+                        fit: BoxFit.contain,
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
             ListTile(
               tileColor: Colors.white,
               leading: CircleAvatar(
                 child: Center(
                   child: Text(
-                    product.id!,
+                    product.id ?? "N/A",
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
-              title: Text(product.productName!),
-              subtitle: Text(product.productDescription!),
-              trailing: Text("Price: ${product.price}"),
+              title: Text(product.productName ?? "N/A"),
+              subtitle: Text(product.productDescription ?? "N/A"),
+              trailing: Text("Price: ${product.price ?? "N/A"}"),
             ),
           ],
         ),

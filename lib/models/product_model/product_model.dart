@@ -24,10 +24,10 @@ class ProductModel {
     this.discountPrice,
     this.serialCode,
     this.imageUrls,
-    this.isSale,
-    this.isPopular,
-    this.isInCart,
-    this.isInFavorite,
+    this.isSale = false,
+    this.isPopular = false,
+    this.isInCart = false,
+    this.isInFavorite = false,
     this.createdAt,
   });
 
