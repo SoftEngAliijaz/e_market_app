@@ -12,9 +12,7 @@ E-Market App is a Flutter application designed for managing products and user in
 - **Responsive Design:** The app is designed to work seamlessly on various devices.
 
 ## Screenshots
-
-![Screenshot 1](./screenshots/screenshot1.png)
-*Add more screenshots if needed*
+Will Add Screenshots ASAP! 😊
 
 ## Tech Stack
 
