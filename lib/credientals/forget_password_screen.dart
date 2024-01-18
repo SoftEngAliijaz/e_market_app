@@ -63,11 +63,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        CircleAvatar(
-                          radius: 100,
-                          child:
-                              Image.asset('assets/images/e_commerce_logo.png'),
-                        ),
+                        AppUtils.buildLogo(100),
                         CustomTextField(
                           textEditingController: emailController,
                           prefixIcon: Icons.email_outlined,

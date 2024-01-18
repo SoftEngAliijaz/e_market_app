@@ -55,13 +55,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
     serialCodeController.clear();
   }
 
-  Widget buildLogo() {
-    return CircleAvatar(
-      radius: 100,
-      backgroundImage: AssetImage('assets/images/e_commerce_logo.png'),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -77,7 +70,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   child: Column(
                     children: [
                       ///logo
-                      buildLogo(),
+                      AppUtils.buildLogo(100),
 
                       ///SizedBox
                       sizedbox(),

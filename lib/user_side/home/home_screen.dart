@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/components/user_home_drawer.dart';
-import 'package:e_market_app/constants/constants.dart';
 import 'package:e_market_app/models/product_model/product_model.dart';
 import 'package:e_market_app/user_side/product_screens/product_cart_screen.dart';
 import 'package:e_market_app/user_side/product_screens/product_detail_screens.dart';
@@ -16,6 +15,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<String> uniqueCategories = [];
   List<ProductModel> allProducts = [];
 
   _fetchData() async {
@@ -44,6 +44,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 createdAt: e['createdAt'],
               );
               allProducts.add(product);
+
+              // Add category to the list if it's not already present
+              if (!uniqueCategories.contains(product.category)) {
+                uniqueCategories.add(product.category!);
+              }
             });
           }
         });
@@ -95,27 +100,27 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: [
           Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: streamData,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: AppUtils.customProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  if (snapshot.hasData) {
-                    return ListView.builder(
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        DocumentSnapshot productValue =
-                            snapshot.data!.docs[index];
-                        return _buildProductCard(productValue);
-                      },
+            child: ListView.builder(
+              itemCount: uniqueCategories.length,
+              itemBuilder: (BuildContext context, int index) {
+                String category = uniqueCategories[index];
+                return ListTile(
+                  title: Text(category),
+                  onTap: () {
+                    // Navigate to a screen showing products for the selected category
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CategoryProductsScreen(
+                          category: category,
+                          products: allProducts
+                              .where((product) => product.category == category)
+                              .toList(),
+                        ),
+                      ),
                     );
-                  } else {
-                    return Center(child: AppUtils.customProgressIndicator());
-                  }
-                }
+                  },
+                );
               },
             ),
           ),
@@ -123,29 +128,41 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+}
 
-  Widget _buildProductCard(DocumentSnapshot productData) {
-    ProductModel productModel = ProductModel(
-      brand: productData['brand'],
-      category: productData['category'],
-      id: productData['id'],
-      productName: productData['productName'],
-      productDescription: productData['productDescription'],
-      price: productData['price'],
-      discountPrice: productData['discountPrice'],
-      serialCode: productData['serialCode'],
-      imageUrls: productData['imageUrls'],
-      isSale: productData['isSale'],
-      isPopular: productData['isPopular'],
-      isInCart: productData['isInCart'],
-      isInFavorite: productData['isInFavorite'],
-      createdAt: productData['createdAt'],
+class CategoryProductsScreen extends StatelessWidget {
+  final String category;
+  final List<ProductModel> products;
+
+  const CategoryProductsScreen({
+    Key? key,
+    required this.category,
+    required this.products,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(category),
+      ),
+      body: ListView.builder(
+        itemCount: products.length,
+        itemBuilder: (BuildContext context, int index) {
+          return _buildProductCard(context, products[index]);
+        },
+      ),
     );
+  }
 
+  Widget _buildProductCard(
+    BuildContext buildContext,
+    ProductModel productModel,
+  ) {
     return InkWell(
       onTap: () {
         Navigator.push(
-          context,
+          buildContext,
           MaterialPageRoute(
             builder: (context) => ProductDetailScreen(product: productModel),
           ),

@@ -47,8 +47,8 @@ class AdminDashBoard extends StatelessWidget {
             // Customize this part based on your data structure
             return ListTile(
               leading: const Icon(Icons.admin_panel_settings_outlined),
-              title: Text("Welcome: ${data['displayName'] ?? ''}"),
-              subtitle: Text("Email: ${data['email'] ?? ''}"),
+              title: Text("Welcome: ${data['displayName'] ?? 'N/A'}"),
+              subtitle: Text("Email: ${data['email'] ?? 'N/A'}"),
             );
           }).toList();
 

@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/admin/dashboard/admin_dashboard_screen.dart';
+import 'package:e_market_app/constants/constants.dart';
 import 'package:e_market_app/security_utils/security_utils.dart';
 import 'package:e_market_app/user_side/home/home_screen.dart';
 import 'package:e_market_app/widgets/account_selection.dart';
@@ -143,11 +144,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const CircleAvatar(
-                              radius: 100,
-                              backgroundImage: AssetImage(
-                                  'assets/images/e_commerce_logo.png'),
-                            ),
+                            AppUtils.buildLogo(100),
                             CustomTextField(
                               textEditingController: _nameC,
                               prefixIcon: Icons.person_outline,

@@ -16,7 +16,8 @@ class CartModel {
   });
 
   static Future<void> addtoCart(CartModel cart) async {
-    CollectionReference db = FirebaseFirestore.instance.collection("cart");
+    final String _collection = 'cart';
+    CollectionReference db = FirebaseFirestore.instance.collection(_collection);
     Map<String, dynamic> data = {
       "id": cart.id,
       "productName": cart.name,

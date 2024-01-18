@@ -1,7 +1,7 @@
 class UserModel {
-  final String uid;
-  final String email;
-  final String displayName;
+  final String? uid;
+  final String? email;
+  final String? displayName;
   final String? photoUrl; // Updated from photoURL
   final String? userType;
   final bool? isAdmin;
@@ -28,11 +28,11 @@ class UserModel {
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      uid: map['uid'],
-      email: map['email'],
-      displayName: map['displayName'],
-      photoUrl: map['photoUrl'],
-      userType: map['userType'],
+      uid: map['uid'] ?? '',
+      email: map['email'] ?? '',
+      displayName: map['displayName'] ?? '',
+      photoUrl: map['photoUrl'] ?? '',
+      userType: map['userType'] ?? '',
       isAdmin: map['isAdmin'] ?? false,
     );
   }

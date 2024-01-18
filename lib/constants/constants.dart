@@ -40,6 +40,14 @@ class AppUtils {
       title: Text(title),
     ));
   }
+
+  ///app logo
+  static Widget buildLogo(double radius) {
+    return CircleAvatar(
+      radius: radius,
+      backgroundImage: AssetImage('assets/images/e_commerce_logo.png'),
+    );
+  }
 }
 
 ///sizedbox custom

@@ -15,12 +15,13 @@ class UpdateProductScreen extends StatefulWidget {
 class _UpdateProductScreenState extends State<UpdateProductScreen> {
   @override
   Widget build(BuildContext context) {
+    final String _collection = 'products';
     return Scaffold(
       appBar: AppBar(
         title: const Text('Update Products'),
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('products').snapshots(),
+        stream: FirebaseFirestore.instance.collection(_collection).snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: AppUtils.customProgressIndicator());
@@ -103,21 +104,21 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                                   TextFormField(
                                     controller: descriptionController,
                                     decoration: const InputDecoration(
-                                      labelText: 'Description',
+                                      labelText: 'Product Description',
                                     ),
                                   ),
                                   TextFormField(
                                     controller: priceController,
                                     keyboardType: TextInputType.number,
                                     decoration: const InputDecoration(
-                                      labelText: 'Price',
+                                      labelText: 'Product Price',
                                     ),
                                   ),
                                   TextFormField(
                                     controller: discountController,
                                     keyboardType: TextInputType.number,
                                     decoration: const InputDecoration(
-                                      labelText: 'Discount',
+                                      labelText: 'Product Discount',
                                     ),
                                   ),
                                   TextFormField(
@@ -129,7 +130,7 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                                   TextFormField(
                                     controller: productBrandController,
                                     decoration: const InputDecoration(
-                                      labelText: 'Product Brand',
+                                      labelText: 'Enter Brand',
                                     ),
                                   ),
                                 ],

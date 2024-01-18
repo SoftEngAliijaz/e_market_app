@@ -1,3 +1,4 @@
+import 'package:e_market_app/constants/constants.dart';
 import 'package:e_market_app/user_side/product_screens/product_cart_screen.dart';
 import 'package:e_market_app/user_side/product_screens/product_fav_screen.dart';
 import 'package:e_market_app/credientals/login_screen.dart';
@@ -17,13 +18,10 @@ Drawer userHomeDrawer(BuildContext context) {
           child: Container(
             width: double.infinity,
             color: Theme.of(context).primaryColor,
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircleAvatar(
-                  backgroundImage:
-                      AssetImage('assets/images/e_commerce_logo.png'),
-                ),
+                AppUtils.buildLogo(50),
                 SizedBox(width: 10),
                 Center(
                   child: Text('WELCOME TO SHOPBIZ',

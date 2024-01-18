@@ -33,19 +33,19 @@ class ProductModel {
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
-      category: json['category'],
-      id: json['id'],
-      productName: json['productName'],
-      productDescription: json['productDescription'],
-      price: json['price'],
-      brand: json['brand'],
-      discountPrice: json['discountPrice'],
-      serialCode: json['serialCode'],
+      category: json['category'] ?? '',
+      id: json['id'] ?? '',
+      productName: json['productName'] ?? '',
+      productDescription: json['productDescription'] ?? '',
+      price: json['price'] ?? '',
+      brand: json['brand'] ?? '',
+      discountPrice: json['discountPrice'] ?? '',
+      serialCode: json['serialCode'] ?? '',
       imageUrls: json['imageUrls']?.cast<String>(), // cast to List<String>
-      isSale: json['isSale'],
-      isPopular: json['isPopular'],
-      isInCart: json['isInCart'],
-      isInFavorite: json['isInFavorite'],
+      isSale: json['isSale'] ?? '',
+      isPopular: json['isPopular'] ?? '',
+      isInCart: json['isInCart'] ?? '',
+      isInFavorite: json['isInFavorite'] ?? '',
       createdAt: json['createdAt'] != null
           ? DateTime.fromMillisecondsSinceEpoch(json['createdAt'])
           : null,

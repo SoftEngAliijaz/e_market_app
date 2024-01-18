@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/admin/dashboard/admin_dashboard_screen.dart';
+import 'package:e_market_app/constants/constants.dart';
 import 'package:e_market_app/credientals/signup_screen.dart';
 import 'package:e_market_app/models/user_model/user_model.dart';
 import 'package:e_market_app/user_side/home/home_screen.dart';
@@ -139,11 +140,7 @@ class _LogInScreenState extends State<LogInScreen> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          CircleAvatar(
-                            radius: 100,
-                            backgroundImage:
-                                AssetImage('assets/images/e_commerce_logo.png'),
-                          ),
+                          AppUtils.buildLogo(100),
                           TextFormField(
                             controller: _emailC,
                             keyboardType: TextInputType.emailAddress,
