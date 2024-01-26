@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/constants/constants.dart';
 import 'package:e_market_app/firebase_services/firebase_services.dart';
+import 'package:e_market_app/security_utils/security_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -14,7 +15,9 @@ class DeleteProductScreen extends StatelessWidget {
         title: const Text('Delete Products'),
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('products').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection(SecurityUtils.productCollection)
+            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: AppUtils.customProgressIndicator());

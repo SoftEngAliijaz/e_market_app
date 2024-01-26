@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/constants/constants.dart';
 import 'package:e_market_app/models/product_model/categories_model.dart';
 import 'package:e_market_app/models/product_model/product_model.dart';
+import 'package:e_market_app/security_utils/security_utils.dart';
 import 'package:e_market_app/widgets/custom_text_field.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -343,7 +344,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
       DateTime createdAt = DateTime.now();
 
-      await FirebaseFirestore.instance.collection('products').add(
+      await FirebaseFirestore.instance
+          .collection(SecurityUtils.productCollection)
+          .add(
             ProductModel(
               category: selectedCategory,
               id: uuid.v4(),

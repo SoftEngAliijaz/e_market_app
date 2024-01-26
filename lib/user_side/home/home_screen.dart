@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/components/user_home_drawer.dart';
 import 'package:e_market_app/models/product_model/product_model.dart';
+import 'package:e_market_app/security_utils/security_utils.dart';
 import 'package:e_market_app/user_side/product_screens/product_cart_screen.dart';
 import 'package:e_market_app/user_side/product_screens/product_detail_screens.dart';
 import 'package:e_market_app/user_side/product_screens/product_fav_screen.dart';
@@ -65,8 +66,9 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-  final streamData =
-      FirebaseFirestore.instance.collection('products').snapshots();
+  final streamData = FirebaseFirestore.instance
+      .collection(SecurityUtils.productCollection)
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {

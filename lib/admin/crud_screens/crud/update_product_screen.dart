@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/constants/constants.dart';
 import 'package:e_market_app/firebase_services/firebase_services.dart';
 import 'package:e_market_app/models/product_model/product_model.dart';
+import 'package:e_market_app/security_utils/security_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -15,13 +16,14 @@ class UpdateProductScreen extends StatefulWidget {
 class _UpdateProductScreenState extends State<UpdateProductScreen> {
   @override
   Widget build(BuildContext context) {
-    final String _collection = 'products';
     return Scaffold(
       appBar: AppBar(
         title: const Text('Update Products'),
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection(_collection).snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection(SecurityUtils.productCollection)
+            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: AppUtils.customProgressIndicator());

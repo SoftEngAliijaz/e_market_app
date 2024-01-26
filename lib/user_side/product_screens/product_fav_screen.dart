@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_market_app/constants/constants.dart';
 import 'package:e_market_app/models/product_model/product_model.dart';
+import 'package:e_market_app/security_utils/security_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -14,7 +15,9 @@ class ProductFavScreen extends StatelessWidget {
         title: Text('Favorite Products'),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('favorites').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection(SecurityUtils.favoriteCollection)
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // Loading indicator while data is being fetched
