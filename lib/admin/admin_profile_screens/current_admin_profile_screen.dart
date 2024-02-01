@@ -21,6 +21,8 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
   String? _adminPhotoUrl;
 
   final picker = ImagePicker();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
 
   @override
   void initState() {
@@ -46,23 +48,22 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
   }
 
   // Function to update admin profile
-  void updateAdminProfile(
-      BuildContext context, String currentUserUid, String newDisplayName,
-      {String? newEmail, File? newPhoto}) async {
+  void updateAdminProfile(BuildContext context, String currentUserUid,
+      {File? newPhoto}) async {
     try {
       // Map to hold updated profile data
       Map<String, dynamic> updateData = {};
 
-      // Update the display name
-      if (newDisplayName.isNotEmpty) {
-        updateData['displayName'] = newDisplayName;
-        _adminName = newDisplayName;
+      // Update the name if provided
+      if (_nameController.text.isNotEmpty) {
+        updateData['displayName'] = _nameController.text;
+        _adminName = _nameController.text;
       }
 
       // Update the email if provided
-      if (newEmail != null && newEmail.isNotEmpty) {
-        updateData['email'] = newEmail;
-        _adminEmail = newEmail;
+      if (_emailController.text.isNotEmpty) {
+        updateData['email'] = _emailController.text;
+        _adminEmail = _emailController.text;
       }
 
       // Upload new profile picture if provided
@@ -129,9 +130,9 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
             color: Theme.of(context).primaryColor,
             shape: StadiumBorder(),
             onPressed: () {
-              updateAdminProfile(context,
-                  FirebaseAuth.instance.currentUser!.uid, _adminName ?? '',
-                  newEmail: _adminEmail, newPhoto: _imageFile);
+              updateAdminProfile(
+                  context, FirebaseAuth.instance.currentUser!.uid,
+                  newPhoto: _imageFile);
             },
             child: Center(
               child: Text(
@@ -163,6 +164,22 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
                   child: _adminPhotoUrl!.isEmpty
                       ? Icon(Icons.person, size: 100)
                       : null,
+                ),
+              ),
+
+              // Text fields for name and email
+              SizedBox(height: 20),
+              TextFormField(
+                controller: _nameController,
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                ),
+              ),
+              SizedBox(height: 10),
+              TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
                 ),
               ),
 
