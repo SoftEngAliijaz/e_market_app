@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_market_app/constants/constants.dart';
 import 'package:e_market_app/constants/db_collections.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -162,24 +163,27 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
                       ? NetworkImage(_adminPhotoUrl!)
                       : null,
                   child: _adminPhotoUrl!.isEmpty
-                      ? Icon(Icons.person, size: 100)
+                      ? Image.network(AppUtils.noProfileImage)
                       : null,
                 ),
               ),
 
               // Text fields for name and email
-              SizedBox(height: 20),
+              sizedbox(),
+              sizedbox(),
+
+              ///
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(
-                  labelText: 'Name',
+                  labelText: _adminName,
                 ),
               ),
-              SizedBox(height: 10),
+              sizedbox(),
               TextFormField(
                 controller: _emailController,
                 decoration: InputDecoration(
-                  labelText: 'Email',
+                  labelText: _adminEmail,
                 ),
               ),
 
