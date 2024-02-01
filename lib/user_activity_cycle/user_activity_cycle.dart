@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_market_app/constants/db_collections.dart';
 import 'package:e_market_app/credientals/login_screen.dart';
 import 'package:e_market_app/admin/dashboard/admin_dashboard_screen.dart';
 import 'package:e_market_app/user_side/home/home_screen.dart';
@@ -15,7 +16,8 @@ class UserActivityCycleScreen extends StatelessWidget {
     try {
       // Retrieve additional user data from Firestore or another source
       DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-          .collection('admins') // Change to 'admins' collection
+          .collection(DatabaseCollection
+              .adminsCollection) // Change to 'admins' collection
           .doc(userId)
           .get();
 

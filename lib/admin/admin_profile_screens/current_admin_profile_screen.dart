@@ -158,28 +158,30 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
               GestureDetector(
                 onTap: _pickImage,
                 child: CircleAvatar(
-                  radius: 100,
-                  backgroundImage: _adminPhotoUrl!.isNotEmpty
-                      ? NetworkImage(_adminPhotoUrl!)
-                      : null,
-                  child: _adminPhotoUrl!.isEmpty
-                      ? Image.network(AppUtils.noProfileImage)
-                      : null,
-                ),
+                    radius: 100,
+                    backgroundImage: _adminPhotoUrl!.isNotEmpty
+                        ? NetworkImage(_adminPhotoUrl!)
+                        : null,
+                    child: _adminPhotoUrl!.isEmpty
+                        ? Image.network(AppUtils.noProfileImage)
+                        : null),
               ),
 
-              // Text fields for name and email
+              ///
               sizedbox(),
               sizedbox(),
 
-              ///
+              // Text fields for name and email
               TextFormField(
                 controller: _nameController,
                 decoration: InputDecoration(
                   labelText: _adminName,
                 ),
               ),
+
+              ///
               sizedbox(),
+
               TextFormField(
                 controller: _emailController,
                 decoration: InputDecoration(
@@ -188,8 +190,8 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
               ),
 
               // Display admin name and email
-              tile(Icons.person, _adminName ?? 'Loading...'),
-              tile(Icons.email, _adminEmail ?? 'Loading...'),
+              _listTile(Icons.person, _adminName ?? 'Loading...'),
+              _listTile(Icons.email, _adminEmail ?? 'Loading...'),
             ],
           ),
         ),
@@ -197,8 +199,8 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
     );
   }
 
-  // Function to build a tile widget
-  Widget tile(IconData leadingIcon, String title) {
+  // Function to build a _listTile widget
+  Widget _listTile(IconData leadingIcon, String title) {
     return Card(
       child: ListTile(
         leading: Icon(leadingIcon),

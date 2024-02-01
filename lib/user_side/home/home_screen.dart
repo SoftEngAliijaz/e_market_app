@@ -3,7 +3,7 @@ import 'package:e_market_app/components/user_home_drawer.dart';
 import 'package:e_market_app/constants/db_collections.dart';
 import 'package:e_market_app/models/product_model/product_model.dart';
 import 'package:e_market_app/user_side/product_screens/product_cart_screen.dart';
-import 'package:e_market_app/user_side/product_screens/product_detail_screens.dart';
+import 'package:e_market_app/user_side/product_screens/product_category_screen.dart';
 import 'package:e_market_app/user_side/product_screens/product_fav_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -16,43 +16,45 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  ///
   List<String> uniqueCategories = [];
   List<ProductModel> allProducts = [];
 
+  ///fetching data
   _fetchData() async {
     try {
-      await FirebaseFirestore.instance
-          .collection("products")
-          .get()
-          .then((QuerySnapshot? snapshot) {
-        snapshot!.docs.forEach((e) {
-          if (e.exists) {
-            setState(() {
-              ProductModel product = ProductModel(
-                brand: e['brand'],
-                category: e['category'],
-                id: e['id'],
-                productName: e['productName'],
-                productDescription: e['productDescription'],
-                price: e['price'],
-                discountPrice: e['discountPrice'],
-                serialCode: e['serialCode'],
-                imageUrls: e['imageUrls'],
-                isSale: e['isSale'],
-                isPopular: e['isPopular'],
-                isInCart: e['isInCart'],
-                isInFavorite: e['isInFavorite'],
-                createdAt: e['createdAt'],
-              );
-              allProducts.add(product);
+      QuerySnapshot snapshot =
+          await FirebaseFirestore.instance.collection("products").get();
 
-              // Add category to the list if it's not already present
-              if (!uniqueCategories.contains(product.category)) {
-                uniqueCategories.add(product.category!);
-              }
-            });
+      // Clear the previous data
+      uniqueCategories.clear();
+      allProducts.clear();
+
+      snapshot.docs.forEach((DocumentSnapshot e) {
+        if (e.exists) {
+          ProductModel product = ProductModel(
+            brand: e['brand'],
+            category: e['category'],
+            id: e['id'],
+            productName: e['productName'],
+            productDescription: e['productDescription'],
+            price: e['price'],
+            discountPrice: e['discountPrice'],
+            serialCode: e['serialCode'],
+            imageUrls: e['imageUrls'],
+            isSale: e['isSale'],
+            isPopular: e['isPopular'],
+            isInCart: e['isInCart'],
+            isInFavorite: e['isInFavorite'],
+            createdAt: e['createdAt'],
+          );
+          allProducts.add(product);
+
+          // Add category to the list if it's not already present
+          if (!uniqueCategories.contains(product.category)) {
+            uniqueCategories.add(product.category!);
           }
-        });
+        }
       });
     } catch (e) {
       print("Error fetching data: $e");
@@ -113,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CategoryProductsScreen(
+                        builder: (context) => ProductCategoryScreen(
                           category: category,
                           products: allProducts
                               .where((product) => product.category == category)
@@ -127,79 +129,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class CategoryProductsScreen extends StatelessWidget {
-  final String category;
-  final List<ProductModel> products;
-
-  const CategoryProductsScreen({
-    Key? key,
-    required this.category,
-    required this.products,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(category),
-      ),
-      body: ListView.builder(
-        itemCount: products.length,
-        itemBuilder: (BuildContext context, int index) {
-          return _buildProductCard(context, products[index]);
-        },
-      ),
-    );
-  }
-
-  Widget _buildProductCard(
-    BuildContext buildContext,
-    ProductModel productModel,
-  ) {
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-          buildContext,
-          MaterialPageRoute(
-            builder: (context) => ProductDetailScreen(product: productModel),
-          ),
-        );
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.black),
-          ),
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.black),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: productModel.imageUrls != null &&
-                          productModel.imageUrls!.isNotEmpty
-                      ? Image.network(
-                          productModel.imageUrls![0],
-                          height: 80,
-                          width: 80,
-                        )
-                      : Placeholder(child: Text('PlaceHolder')),
-                ),
-              ),
-              Expanded(child: Text(productModel.productName!)),
-            ],
-          ),
-        ),
       ),
     );
   }

@@ -3,19 +3,18 @@ import 'package:e_market_app/constants/db_collections.dart';
 import 'package:e_market_app/models/product_model/product_model.dart';
 
 class FirebaseServices {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
   // Create a new product
   Future<void> addProduct(ProductModel product) async {
-    await _firestore
+    await FirebaseFirestore.instance
         .collection(DatabaseCollection.productCollection)
         .add(product.toJson());
   }
 
   // Get a list of all products
   Future<List<ProductModel>> getProducts() async {
-    QuerySnapshot querySnapshot =
-        await _firestore.collection(DatabaseCollection.productCollection).get();
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection(DatabaseCollection.productCollection)
+        .get();
 
     return querySnapshot.docs
         .map((doc) => ProductModel.fromJson(doc.data() as Map<String, dynamic>))
@@ -24,7 +23,7 @@ class FirebaseServices {
 
   // Get a single product by ID
   Future<ProductModel?> getProductById(String productId) async {
-    DocumentSnapshot documentSnapshot = await _firestore
+    DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
         .collection(DatabaseCollection.productCollection)
         .doc(productId)
         .get();
@@ -39,7 +38,7 @@ class FirebaseServices {
 
   // Update a product
   Future<void> updateProduct(ProductModel product) async {
-    await _firestore
+    await FirebaseFirestore.instance
         .collection(DatabaseCollection.productCollection)
         .doc(product.id)
         .update(product.toJson());
@@ -47,7 +46,7 @@ class FirebaseServices {
 
   // Delete a product
   Future<void> deleteProduct(String productId) async {
-    await _firestore
+    await FirebaseFirestore.instance
         .collection(DatabaseCollection.productCollection)
         .doc(productId)
         .delete();

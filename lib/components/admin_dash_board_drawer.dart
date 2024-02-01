@@ -24,17 +24,13 @@ class AdminDashBoardDrawer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Center(
-                    child: Icon(
-                      Icons.admin_panel_settings,
-                      color: Colors.white,
-                    ),
+                    child:
+                        Icon(Icons.admin_panel_settings, color: Colors.white),
                   ),
                   Center(
                       child: Text(
                     'Welcome Admin',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
+                    style: TextStyle(color: Colors.white),
                   )),
                 ],
               ),

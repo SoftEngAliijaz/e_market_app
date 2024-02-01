@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_market_app/constants/db_collections.dart';
 import 'package:e_market_app/models/product_model/product_model.dart';
 import 'package:flutter/material.dart';
 
@@ -113,7 +114,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       });
 
       // Add or remove the product from the cart collection in Firestore
-      final cartReference = FirebaseFirestore.instance.collection('cart');
+      final cartReference = FirebaseFirestore.instance
+          .collection(DatabaseCollection.cartCollection);
 
       if (widget.product!.isInCart == true) {
         // Add to cart
@@ -140,8 +142,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       });
 
       // Add or remove the product from the favorites collection in Firestore
-      final favoritesReference =
-          FirebaseFirestore.instance.collection('favorites');
+      final favoritesReference = FirebaseFirestore.instance
+          .collection(DatabaseCollection.favoriteCollection);
 
       if (widget.product!.isInFavorite == true) {
         // Add to favorites
