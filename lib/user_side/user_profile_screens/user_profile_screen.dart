@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/constants/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -37,72 +38,98 @@ class _ProfileScreenState extends State<ProfileScreen> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData && snapshot.data != null) {
             var user = snapshot.data!;
-            return Column(
-              children: [
-                SizedBox(
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: CircleAvatar(
-                        radius: 100,
-                        backgroundColor: Colors.grey,
-                        child: InkWell(
-                          onTap: () {
-                            showModalBottomSheetSuggestions(context);
-                          },
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: double.infinity,
-                            child: _pickedImage != null
-                                ? CircleAvatar(
-                                    radius: 100,
-                                    backgroundImage: FileImage(_pickedImage!),
-                                  )
-                                : user['photoUrl'] != null
-                                    ? CircleAvatar(
-                                        radius: 100,
-                                        backgroundImage:
-                                            NetworkImage(user['photoURL']),
-                                      )
-                                    : const Icon(Icons.person, size: 100.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                sizedbox(),
-
-                ///profile cards
-                AppUtils.userProfileCard(
-                    Icons.person_outline, user['displayName'].toString()),
-
-                sizedbox(),
-
-                AppUtils.userProfileCard(
-                    Icons.email_outlined, user['email'].toString()),
-
-                sizedbox(),
-
-                ///save button
-                MaterialButton(
-                  color: Theme.of(context).primaryColor,
-                  child: const Text(
-                    'SAVE',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () {
-                    _updateProfile(user.id);
-                  },
-                ),
-              ],
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildProfileImage(user),
+                  _buildNameField(),
+                  _buildProfileCard(
+                      Icons.person_outline, user['displayName'].toString()),
+                  _buildProfileCard(
+                      Icons.email_outlined, user['email'].toString()),
+                  _buildSaveButton(user.id),
+                ],
+              ),
             );
           } else {
             return const Center(child: Text('No user data found.'));
           }
         },
       ),
+    );
+  }
+
+  Widget _buildProfileImage(DocumentSnapshot user) {
+    return SizedBox(
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: CircleAvatar(
+            radius: 100,
+            backgroundColor: Colors.grey,
+            child: InkWell(
+              onTap: () {
+                showModalBottomSheetSuggestions(context);
+              },
+              child: SizedBox(
+                width: double.infinity,
+                height: double.infinity,
+                child: _pickedImage != null
+                    ? CircleAvatar(
+                        radius: 100,
+                        backgroundImage: FileImage(_pickedImage!),
+                      )
+                    : user['photoUrl'] != null
+                        ? CircleAvatar(
+                            radius: 100,
+                            backgroundImage: NetworkImage(user['photoURL']),
+                          )
+                        : const Icon(Icons.person, size: 100.0),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNameField() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        controller: _nameController,
+        decoration: InputDecoration(
+          labelText: 'Name',
+          border: OutlineInputBorder(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfileCard(IconData icon, String text) {
+    return Column(
+      children: [
+        sizedbox(),
+        AppUtils.userProfileCard(icon, text),
+      ],
+    );
+  }
+
+  Widget _buildSaveButton(String userId) {
+    return Column(
+      children: [
+        sizedbox(),
+        MaterialButton(
+          color: Theme.of(context).primaryColor,
+          child: const Text(
+            'SAVE',
+            style: TextStyle(color: Colors.white),
+          ),
+          onPressed: () {
+            _updateProfile(userId);
+          },
+        ),
+      ],
     );
   }
 
@@ -166,10 +193,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  ///
   Future<String?> uploadImageAndGetDownloadURL(File imageFile) async {
     try {
-      /// Upload the image to Firebase Storage and get the download URL using Firebase Storage:
       Reference storageRef = FirebaseStorage.instance
           .ref()
           .child('profile_images')
@@ -189,38 +214,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String newName = _nameController.text.trim();
 
     try {
-      // Fetch current user data
       DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
           .get();
 
-      // Get current user data
       Map<String, dynamic> userData =
           userSnapshot.data() as Map<String, dynamic>;
 
-      // Update display name if it's not empty
       if (newName.isNotEmpty) {
         await FirebaseAuth.instance.currentUser!.updateDisplayName(newName);
         userData['displayName'] = newName;
       }
 
-      // Upload and update profile image if it's selected
       if (_pickedImage != null) {
         String? downloadURL = await uploadImageAndGetDownloadURL(_pickedImage!);
 
         if (downloadURL != null) {
-          // Update 'photoURL' in Firestore with the download URL
           userData['photoURL'] = downloadURL;
 
-          // Update the state to reflect the new picked image
           setState(() {
             _pickedImage = _pickedImage;
           });
         }
       }
 
-      // Update Firestore document with the new user data
       await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
