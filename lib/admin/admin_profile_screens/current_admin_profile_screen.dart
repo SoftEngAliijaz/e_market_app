@@ -16,9 +16,9 @@ class CurrentAdminProfileScreen extends StatefulWidget {
 }
 
 class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
-  String? adminName;
-  String? adminEmail;
-  String? adminPhotoUrl;
+  String? _adminName;
+  String? _adminEmail;
+  String? _adminPhotoUrl;
 
   final picker = ImagePicker();
 
@@ -38,9 +38,9 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
 
     if (snapshot.exists) {
       setState(() {
-        adminName = snapshot['displayName'];
-        adminEmail = snapshot['email'];
-        adminPhotoUrl = snapshot['photoUrl'];
+        _adminName = snapshot['displayName'];
+        _adminEmail = snapshot['email'];
+        _adminPhotoUrl = snapshot['photoUrl'];
       });
     }
   }
@@ -56,13 +56,13 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
       // Update the display name
       if (newDisplayName.isNotEmpty) {
         updateData['displayName'] = newDisplayName;
-        adminName = newDisplayName;
+        _adminName = newDisplayName;
       }
 
       // Update the email if provided
       if (newEmail != null && newEmail.isNotEmpty) {
         updateData['email'] = newEmail;
-        adminEmail = newEmail;
+        _adminEmail = newEmail;
       }
 
       // Upload new profile picture if provided
@@ -74,7 +74,7 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
         TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
         String photoUrl = await taskSnapshot.ref.getDownloadURL();
         updateData['photoUrl'] = photoUrl;
-        adminPhotoUrl = photoUrl;
+        _adminPhotoUrl = photoUrl;
       }
 
       // Update Firestore document with the new data
@@ -128,7 +128,11 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
           child: MaterialButton(
             color: Theme.of(context).primaryColor,
             shape: StadiumBorder(),
-            onPressed: () {},
+            onPressed: () {
+              updateAdminProfile(context,
+                  FirebaseAuth.instance.currentUser!.uid, _adminName ?? '',
+                  newEmail: _adminEmail, newPhoto: _imageFile);
+            },
             child: Center(
               child: Text(
                 'Update/Save',
@@ -153,18 +157,18 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
                 onTap: _pickImage,
                 child: CircleAvatar(
                   radius: 100,
-                  backgroundImage: adminPhotoUrl!.isNotEmpty
-                      ? NetworkImage(adminPhotoUrl!)
+                  backgroundImage: _adminPhotoUrl!.isNotEmpty
+                      ? NetworkImage(_adminPhotoUrl!)
                       : null,
-                  child: adminPhotoUrl!.isEmpty
+                  child: _adminPhotoUrl!.isEmpty
                       ? Icon(Icons.person, size: 100)
                       : null,
                 ),
               ),
 
               // Display admin name and email
-              tile(Icons.person, adminName ?? 'Loading...'),
-              tile(Icons.email, adminEmail ?? 'Loading...'),
+              tile(Icons.person, _adminName ?? 'Loading...'),
+              tile(Icons.email, _adminEmail ?? 'Loading...'),
             ],
           ),
         ),
