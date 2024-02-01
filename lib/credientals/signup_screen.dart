@@ -115,7 +115,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -123,7 +122,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           width: double.infinity,
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(5.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -131,20 +130,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     key: _formKey,
                     child: SingleChildScrollView(
                       child: Container(
-                        height: size.height * 1.0,
-                        width: size.width,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             const Text(
-                              'WELCOME TO\nE-Commerce App\nCreate Your Account',
+                              'WELCOME To\nE-Market\nCreate Your Account',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 20.0,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
+
+                            ///logo
                             AppUtils.buildLogo(100),
+
                             CustomTextField(
                               textEditingController: _nameC,
                               prefixIcon: Icons.person_outline,
@@ -255,7 +255,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 textEditingController: _adminCodeController,
                                 prefixIcon: Icons.lock_outline,
                                 hintText: 'Enter Admin Code',
-                                obscureText: true,
+                                obscureText: _isObscureForAdmin,
                                 validator: (v) {
                                   if (v!.isEmpty) {
                                     return 'Field Should Not be Empty';
@@ -263,12 +263,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   return null;
                                 },
                                 suffixWidget: IconButton(
-                                  icon: Icon(
-                                    _isObscureForAdmin
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
-                                    color: Theme.of(context).primaryColorDark,
-                                  ),
+                                  icon: Icon(_isObscureForAdmin
+                                      ? Icons.visibility
+                                      : Icons.visibility_off),
                                   onPressed: () {
                                     setState(() {
                                       _isObscureForAdmin = !_isObscureForAdmin;

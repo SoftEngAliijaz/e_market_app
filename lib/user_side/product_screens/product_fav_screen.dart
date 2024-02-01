@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:e_market_app/constants/constants.dart';
-import 'package:e_market_app/models/product_model/product_model.dart';
-import 'package:e_market_app/security_utils/security_utils.dart';
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_market_app/constants/constants.dart';
+import 'package:e_market_app/constants/db_collections.dart';
+import 'package:e_market_app/models/product_model/product_model.dart';
+import 'package:flutter/material.dart';
 
 class ProductFavScreen extends StatelessWidget {
   const ProductFavScreen({Key? key}) : super(key: key);
@@ -16,7 +16,7 @@ class ProductFavScreen extends StatelessWidget {
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
-            .collection(SecurityUtils.favoriteCollection)
+            .collection(DatabaseCollection.favoriteCollection)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

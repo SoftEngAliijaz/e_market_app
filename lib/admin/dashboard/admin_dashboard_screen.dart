@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/components/admin_dash_board_drawer.dart';
 import 'package:e_market_app/components/carousel_slider_component.dart';
 import 'package:e_market_app/constants/constants.dart';
+import 'package:e_market_app/constants/db_collections.dart';
 import 'package:e_market_app/models/ui_models/grid_view_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class AdminDashBoard extends StatelessWidget {
       drawer: const AdminDashBoardDrawer(),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
-            .collection('admins')
+            .collection(DatabaseCollection.adminsCollection)
             .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
             .where('userType', isEqualTo: 'admin')
             .snapshots(),

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_market_app/constants/db_collections.dart';
 import 'package:flutter/material.dart';
 
 class ViewAllAdminScreen extends StatelessWidget {
@@ -12,7 +13,7 @@ class ViewAllAdminScreen extends StatelessWidget {
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
-            .collection('admins')
+            .collection(DatabaseCollection.adminsCollection)
             .where('userType', isEqualTo: 'admin')
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {

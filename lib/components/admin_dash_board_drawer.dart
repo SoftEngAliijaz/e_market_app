@@ -1,3 +1,4 @@
+import 'package:e_market_app/admin/admin_profile_screens/current_admin_profile_screen.dart';
 import 'package:e_market_app/admin/admin_profile_screens/view_all_admin_screens.dart';
 import 'package:e_market_app/admin/crud_screens/crud/add_product_screen.dart';
 import 'package:e_market_app/admin/crud_screens/crud/delete_product_screen.dart';
@@ -39,6 +40,13 @@ class AdminDashBoardDrawer extends StatelessWidget {
               ),
             ),
           ),
+
+          /// Admin dashboard tile
+          _listTileComponent(context, () {
+            Navigator.push(context, MaterialPageRoute(builder: (_) {
+              return const CurrentAdminProfileScreen();
+            }));
+          }, Icons.admin_panel_settings, 'Admin Profile'),
 
           /// Admin dashboard tile
           _listTileComponent(context, () {

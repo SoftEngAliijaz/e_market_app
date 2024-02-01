@@ -7,6 +7,7 @@ import 'package:e_market_app/credientals/signup_screen.dart';
 import 'package:e_market_app/models/user_model/user_model.dart';
 import 'package:e_market_app/user_side/home/home_screen.dart';
 import 'package:e_market_app/widgets/account_selection.dart';
+import 'package:e_market_app/widgets/custom_text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -120,14 +121,14 @@ class _LogInScreenState extends State<LogInScreen> {
           width: double.infinity,
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(5.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Form(
                     key: _formKey,
                     child: Container(
-                      height: size.height * 1.0,
+                      height: size.height,
                       width: size.width,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -136,18 +137,16 @@ class _LogInScreenState extends State<LogInScreen> {
                             'Welcome to\nE-Market App',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 20.0,
+                              fontSize: 25.0,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           AppUtils.buildLogo(100),
-                          TextFormField(
-                            controller: _emailC,
+                          CustomTextField(
+                            textEditingController: _emailC,
+                            hintText: 'Enter Email',
+                            prefixIcon: Icons.email_outlined,
                             keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.email_outlined),
-                              hintText: 'Enter Email',
-                            ),
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return 'Email should not be empty';
@@ -157,23 +156,21 @@ class _LogInScreenState extends State<LogInScreen> {
                               return null;
                             },
                           ),
-                          TextFormField(
-                            controller: _passwordC,
+                          CustomTextField(
+                            textEditingController: _passwordC,
+                            hintText: 'Enter Password',
+                            prefixIcon: Icons.password_outlined,
                             obscureText: _isObscureText,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.password_outlined),
-                              hintText: 'Enter Password',
-                              suffixIcon: IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _isObscureText = !_isObscureText;
-                                  });
-                                },
-                                icon: Icon(
-                                  _isObscureText
-                                      ? Icons.visibility_outlined
-                                      : Icons.visibility_off_outlined,
-                                ),
+                            suffixWidget: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _isObscureText = !_isObscureText;
+                                });
+                              },
+                              icon: Icon(
+                                _isObscureText
+                                    ? Icons.visibility_outlined
+                                    : Icons.visibility_off_outlined,
                               ),
                             ),
                             validator: (value) {

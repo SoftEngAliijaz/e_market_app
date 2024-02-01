@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/constants/constants.dart';
-import 'package:e_market_app/security_utils/security_utils.dart';
+import 'package:e_market_app/constants/db_collections.dart';
 import 'package:flutter/material.dart';
 
 class ProductCartScreen extends StatelessWidget {
@@ -14,7 +14,7 @@ class ProductCartScreen extends StatelessWidget {
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection(SecurityUtils.cartCollection)
+            .collection(DatabaseCollection.cartCollection)
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

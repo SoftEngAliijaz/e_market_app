@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/constants/constants.dart';
+import 'package:e_market_app/constants/db_collections.dart';
 import 'package:e_market_app/models/product_model/categories_model.dart';
 import 'package:e_market_app/models/product_model/product_model.dart';
-import 'package:e_market_app/security_utils/security_utils.dart';
 import 'package:e_market_app/widgets/custom_text_field.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -73,42 +73,37 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       ///logo
                       AppUtils.buildLogo(100),
 
-                      ///SizedBox
-                      sizedbox(),
-
                       /// DropdownButtonFormField
-                      DropdownButtonFormField(
-                        hint: Text('Choose Category'),
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.category),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: DropdownButtonFormField(
+                          hint: Text('Choose Category'),
+                          decoration: const InputDecoration(
+                              prefixIcon: Icon(Icons.category),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.zero)),
+                          validator: (value) {
+                            if (value == null) {
+                              return "category must be selected";
+                            }
+                            return null;
+                          },
+                          value: selectedCategory,
+                          items: categories
+                              .map(
+                                (e) => DropdownMenuItem<String>(
+                                  value: e.title,
+                                  child: Text(e.title!),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedCategory = value.toString();
+                            });
+                          },
                         ),
-                        validator: (value) {
-                          if (value == null) {
-                            return "category must be selected";
-                          }
-                          return null;
-                        },
-                        value: selectedCategory,
-                        items: categories
-                            .map(
-                              (e) => DropdownMenuItem<String>(
-                                value: e.title,
-                                child: Text(e.title!),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedCategory = value.toString();
-                          });
-                        },
                       ),
-
-                      ///SizedBox
-                      sizedbox(),
 
                       ///text fields
                       CustomTextField(
@@ -124,8 +119,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         },
                       ),
 
-                      ///SizedBox
-                      sizedbox(),
                       CustomTextField(
                         prefixIcon: Icons.description,
                         keyboardType: TextInputType.name,
@@ -139,8 +132,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         },
                       ),
 
-                      ///SizedBox
-                      sizedbox(),
                       CustomTextField(
                         prefixIcon: Icons.price_change,
                         keyboardType: TextInputType.number,
@@ -154,8 +145,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         },
                       ),
 
-                      ///SizedBox
-                      sizedbox(),
                       CustomTextField(
                         prefixIcon: Icons.discount,
                         keyboardType: TextInputType.number,
@@ -169,8 +158,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         },
                       ),
 
-                      ///SizedBox
-                      sizedbox(),
                       CustomTextField(
                         prefixIcon: FontAwesomeIcons.code,
                         keyboardType:
@@ -185,8 +172,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         },
                       ),
 
-                      ///SizedBox
-                      sizedbox(),
                       CustomTextField(
                         prefixIcon: FontAwesomeIcons.brandsFontAwesome,
                         keyboardType: TextInputType.name,
@@ -200,8 +185,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         },
                       ),
 
-                      ///SizedBox
-                      sizedbox(),
                       if (images.length < 10)
                         MaterialButton(
                           color: Theme.of(context).primaryColor,
@@ -216,9 +199,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                           },
                         ),
 
-                      ///SizedBox
-                      sizedbox(),
-
                       ///container to show picked images
                       if (images.isNotEmpty)
                         Container(
@@ -231,12 +211,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             physics: ScrollPhysics(),
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 5,
-                            ),
+                                    crossAxisCount: 5),
                             itemCount: images.length,
                             itemBuilder: (BuildContext context, int index) {
                               return Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(10.0),
                                 child: Stack(
                                   children: [
                                     Container(
@@ -245,17 +224,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                       ),
                                       child: Image.file(
                                         File(images[index].path),
-                                        height: 200,
-                                        width: 200,
+                                        height: 300,
+                                        width: 300,
                                         fit: BoxFit.cover,
                                       ),
                                     ),
                                     IconButton(
                                       onPressed: () {
-                                        _removeImage(index);
-                                        // setState(() {
-                                        //   images.removeAt(index);
-                                        // });
+                                        ///Removes the object at position [index] from this list.
+                                        setState(() {
+                                          images.removeAt(index);
+                                        });
                                       },
                                       icon: Center(
                                         child: const Icon(
@@ -276,7 +255,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         title: Text(
                           isOnSale == false
                               ? 'Is this Product on Sale?'
-                              : 'Is ON SALE',
+                              : 'Prodocut is Now on Sale',
                         ),
                         value: isOnSale,
                         onChanged: (v) {
@@ -291,7 +270,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         title: Text(
                           isPopular == false
                               ? 'Is this Product Popular?'
-                              : 'is POPULAR',
+                              : 'Product is now on Popular',
                         ),
                         value: isPopular,
                         onChanged: (v) {
@@ -321,12 +300,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
     );
   }
 
-  void _removeImage(int index) {
-    setState(() {
-      images.removeAt(index);
-    });
-  }
-
   _saveProductsMethod() async {
     setState(() {
       isSaving = true;
@@ -345,7 +318,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       DateTime createdAt = DateTime.now();
 
       await FirebaseFirestore.instance
-          .collection(SecurityUtils.productCollection)
+          .collection(DatabaseCollection.productCollection)
           .add(
             ProductModel(
               category: selectedCategory,

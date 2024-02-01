@@ -24,19 +24,24 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      obscureText: obscureText!,
-      validator: validator,
-      controller: textEditingController,
-      keyboardType: keyboardType,
-      decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          hintText: hintText,
-          hintStyle: const TextStyle(fontWeight: FontWeight.bold),
-          prefixIcon: Icon(prefixIcon),
-          suffixIcon: suffixWidget),
+    return SizedBox(
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: TextFormField(
+          obscureText: obscureText!,
+          validator: validator,
+          controller: textEditingController,
+          keyboardType: keyboardType,
+          decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.zero,
+              ),
+              hintText: hintText,
+              hintStyle: const TextStyle(fontWeight: FontWeight.bold),
+              prefixIcon: Icon(prefixIcon),
+              suffixIcon: suffixWidget),
+        ),
+      ),
     );
   }
 }

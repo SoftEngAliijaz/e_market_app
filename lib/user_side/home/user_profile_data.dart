@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/constants/constants.dart';
-import 'package:e_market_app/security_utils/security_utils.dart';
+import 'package:e_market_app/constants/db_collections.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +12,7 @@ class UserProfileData extends StatelessWidget {
     return Scaffold(
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection(SecurityUtils.usersCollection)
+            .collection(DatabaseCollection.usersCollection)
             .doc(FirebaseAuth.instance.currentUser?.uid ?? '')
             .snapshots(),
         builder:

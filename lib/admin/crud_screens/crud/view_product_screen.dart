@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_market_app/constants/constants.dart';
+import 'package:e_market_app/constants/db_collections.dart';
 import 'package:e_market_app/models/product_model/product_model.dart';
-import 'package:e_market_app/security_utils/security_utils.dart';
 import 'package:flutter/material.dart';
 
 class ViewProductScreen extends StatelessWidget {
@@ -15,7 +15,7 @@ class ViewProductScreen extends StatelessWidget {
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection(SecurityUtils.productCollection)
+            .collection(DatabaseCollection.productCollection)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.active ||

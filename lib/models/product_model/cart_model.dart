@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_market_app/constants/db_collections.dart';
 import 'package:flutter/cupertino.dart';
 
 class CartModel {
@@ -16,8 +17,8 @@ class CartModel {
   });
 
   static Future<void> addtoCart(CartModel cart) async {
-    final String _collection = 'cart';
-    CollectionReference db = FirebaseFirestore.instance.collection(_collection);
+    CollectionReference db = FirebaseFirestore.instance
+        .collection(DatabaseCollection.cartCollection);
     Map<String, dynamic> data = {
       "id": cart.id,
       "productName": cart.name,
