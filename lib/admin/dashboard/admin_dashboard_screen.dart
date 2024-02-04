@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_market_app/components/admin_dash_board_drawer.dart';
-import 'package:e_market_app/components/carousel_slider_component.dart';
+import 'package:e_market_app/components/drawers/admin_dash_board_drawer.dart';
+import 'package:e_market_app/components/slider/carousel_slider_component.dart';
 import 'package:e_market_app/constants/constants.dart';
 import 'package:e_market_app/constants/db_collections.dart';
 import 'package:e_market_app/models/ui_models/grid_view_model.dart';
@@ -101,9 +101,8 @@ class AdminDashBoard extends StatelessWidget {
                         child: Text(
                           textValue,
                           style: const TextStyle(
-                            decoration: TextDecoration.underline,
-                            fontWeight: FontWeight.bold,
-                          ),
+                              decoration: TextDecoration.underline,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],

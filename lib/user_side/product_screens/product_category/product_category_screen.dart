@@ -41,7 +41,7 @@ class ProductCategoryScreen extends StatelessWidget {
         );
       },
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(5.0),
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -55,7 +55,7 @@ class ProductCategoryScreen extends StatelessWidget {
                   border: Border.all(color: Colors.black),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(5.0),
                   child: productModel.imageUrls != null &&
                           productModel.imageUrls!.isNotEmpty
                       ? Image.network(
@@ -63,7 +63,7 @@ class ProductCategoryScreen extends StatelessWidget {
                           height: 80,
                           width: 80,
                         )
-                      : Placeholder(child: Text('PlaceHolder')),
+                      : Placeholder(),
                 ),
               ),
               Expanded(child: Text(productModel.productName!)),

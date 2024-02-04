@@ -15,6 +15,7 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.product?.productName ?? 'Product Detail'),
@@ -72,6 +73,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         ),
       ),
       body: Container(
+        height: size.height,
+        width: size.width,
         child: Column(
           children: [
             Container(
@@ -79,7 +82,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               width: double.infinity,
               child: Center(
                 child: Row(
-                  children: widget.product!.imageUrls!.map((imageUrlValues) {
+                  children: widget.product!.imageUrls!.map((element) {
                     return Image.network(
                       widget.product!.imageUrls!.length.toString(),
                     );

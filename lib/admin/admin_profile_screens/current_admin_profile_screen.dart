@@ -105,7 +105,7 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
     }
   }
 
-  dynamic _imageFile;
+  var _imageFile;
 
   // Function to pick an image from gallery
   Future<void> _pickImage() async {
@@ -149,7 +149,6 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(10),
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

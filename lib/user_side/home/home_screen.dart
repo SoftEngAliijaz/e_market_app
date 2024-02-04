@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_market_app/components/user_home_drawer.dart';
+import 'package:e_market_app/components/drawers/user_home_drawer.dart';
 import 'package:e_market_app/constants/db_collections.dart';
 import 'package:e_market_app/models/product_model/product_model.dart';
 import 'package:e_market_app/user_side/product_screens/product_cart_screen.dart';
-import 'package:e_market_app/user_side/product_screens/product_category_screen.dart';
+import 'package:e_market_app/user_side/product_screens/product_category/product_category_screen.dart';
 import 'package:e_market_app/user_side/product_screens/product_fav_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';

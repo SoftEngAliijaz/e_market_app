@@ -63,7 +63,11 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+
+                        ///buildLogo
                         AppUtils.buildLogo(100),
+
+                        ///fields
                         CustomTextField(
                           textEditingController: emailController,
                           prefixIcon: Icons.email_outlined,
@@ -78,11 +82,9 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                         _isLoading
                             ? const CircularProgressIndicator()
                             : ElevatedButton(
-                                child: Text(
-                                  _isLoading
-                                      ? 'Sending Request...'
-                                      : 'Send Request',
-                                ),
+                                child: Text(_isLoading == true
+                                    ? 'Sending Request...'
+                                    : 'Send Request'),
                                 onPressed: () {
                                   if (_formKey.currentState!.validate()) {
                                     String email = emailController.text.trim();

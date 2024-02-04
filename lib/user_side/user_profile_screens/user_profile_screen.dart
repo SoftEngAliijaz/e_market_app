@@ -42,12 +42,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
             return SingleChildScrollView(
               child: Column(
                 children: [
+                  ///profile image
                   _buildProfileImage(user),
+
+                  ///field
                   _buildNameField(),
+
+                  ///profile Card
                   _buildProfileCard(
                       Icons.person_outline, user['displayName'].toString()),
+
                   _buildProfileCard(
                       Icons.email_outlined, user['email'].toString()),
+
+                  ///saveButton
                   _buildSaveButton(user.id),
                 ],
               ),
@@ -60,6 +68,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  ///_buildProfileImage
   Widget _buildProfileImage(DocumentSnapshot user) {
     return SizedBox(
       child: Card(
@@ -94,6 +103,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  ///_buildNameField
   Widget _buildNameField() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -107,6 +117,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  ///_buildProfileCard
   Widget _buildProfileCard(IconData icon, String text) {
     return Column(
       children: [
@@ -116,6 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  ///_buildSaveButton
   Widget _buildSaveButton(String userId) {
     return Column(
       children: [
@@ -134,6 +146,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  ///showModalBottomSheetSuggestions
   void showModalBottomSheetSuggestions(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -158,6 +171,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  ///_pickFromCamera
   Future<void> _pickFromCamera() async {
     Navigator.pop(context);
     try {
@@ -176,6 +190,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  ///_pickFromGallery
   Future<void> _pickFromGallery() async {
     Navigator.pop(context);
     try {
@@ -194,6 +209,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  ///uploadImageAndGetDownloadURL
   Future<String?> uploadImageAndGetDownloadURL(File imageFile) async {
     try {
       Reference storageRef = FirebaseStorage.instance
@@ -211,6 +227,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  ///_updateProfile
   void _updateProfile(String userId) async {
     String newName = _nameController.text.trim();
 
