@@ -16,7 +16,11 @@ class AdminDashBoard extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
       ),
+
+      ///drawer
       drawer: const AdminDashBoardDrawer(),
+
+      ///
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection(DatabaseCollection.adminsCollection)
@@ -55,9 +59,16 @@ class AdminDashBoard extends StatelessWidget {
 
           return ListView(
             children: [
+              ///
               ...adminWidgets,
+
+              ///
               sizedbox(),
+
+              ///
               carouselSliderMethod(),
+
+              ///
               _buildGridViewItems(),
             ],
           );

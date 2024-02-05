@@ -105,6 +105,7 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
     }
   }
 
+  ///_imageFile
   var _imageFile;
 
   // Function to pick an image from gallery
@@ -123,6 +124,8 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
       appBar: AppBar(
         title: Text('Admin Profile'),
       ),
+
+      /// bottomNavigationBar
       bottomNavigationBar: SizedBox(
         height: 60,
         child: Padding(
@@ -168,7 +171,6 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
 
               ///
               sizedbox(),
-              sizedbox(),
 
               // Text fields for name and email
               TextFormField(
@@ -203,7 +205,7 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
     return Card(
       child: ListTile(
         leading: Icon(leadingIcon),
-        title: Text(title),
+        title: Text(title, textAlign: TextAlign.center),
       ),
     );
   }

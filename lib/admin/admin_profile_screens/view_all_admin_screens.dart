@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_market_app/constants/constants.dart';
 import 'package:e_market_app/constants/db_collections.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +24,7 @@ class ViewAllAdminScreen extends StatelessWidget {
 
           if (snapshot.connectionState == ConnectionState.waiting) {
             // Loading indicator
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: AppUtils.customProgressIndicator());
           }
 
           // If there is no data, display a message

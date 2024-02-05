@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_market_app/constants/constants.dart';
 import 'package:e_market_app/constants/db_collections.dart';
 import 'package:e_market_app/credientals/login_screen.dart';
 import 'package:e_market_app/admin/dashboard/admin_dashboard_screen.dart';
@@ -37,8 +38,8 @@ class UserActivityCycleScreen extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-              child: CircularProgressIndicator()); // Loading indicator
+          return Center(
+              child: AppUtils.customProgressIndicator()); // Loading indicator
         }
 
         if (snapshot.hasError) {
@@ -55,8 +56,9 @@ class UserActivityCycleScreen extends StatelessWidget {
             future: isAdminUser(user.uid),
             builder: (context, adminSnapshot) {
               if (adminSnapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(), // Loading indicator
+                return Center(
+                  child:
+                      AppUtils.customProgressIndicator(), // Loading indicator
                 );
               }
 

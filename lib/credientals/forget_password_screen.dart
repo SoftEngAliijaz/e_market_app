@@ -80,7 +80,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                           },
                         ),
                         _isLoading
-                            ? const CircularProgressIndicator()
+                            ? AppUtils.customProgressIndicator()
                             : ElevatedButton(
                                 child: Text(_isLoading == true
                                     ? 'Sending Request...'
