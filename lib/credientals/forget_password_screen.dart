@@ -1,9 +1,9 @@
-import 'package:e_market_app/constants/constants.dart';
+import 'package:e_market_app/constants/constants.dart' as k;
 import 'package:e_market_app/credientals/login_screen.dart';
 import 'package:e_market_app/widgets/custom_text_field.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fluttertoast/fluttertoast.dart' as toast;
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({Key? key}) : super(key: key);
@@ -22,14 +22,16 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
       setState(() {
         _isLoading = true;
       });
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      Fluttertoast.showToast(msg: 'Password reset email sent successfully.');
+      await firebase_auth.FirebaseAuth.instance
+          .sendPasswordResetEmail(email: email);
+      toast.Fluttertoast.showToast(
+          msg: 'Password reset email sent successfully.');
 
       Navigator.push(context, MaterialPageRoute(builder: (_) {
         return LogInScreen();
       }));
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      toast.Fluttertoast.showToast(msg: e.toString());
     } finally {
       setState(() {
         _isLoading = false;
@@ -42,7 +44,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
     return Scaffold(
       body: _isLoading == false
           ? Center(
-              child: AppUtils.customProgressIndicator(),
+              child: k.AppUtils.customProgressIndicator(),
             )
           : SafeArea(
               child: SizedBox(
@@ -65,7 +67,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                         ),
 
                         ///buildLogo
-                        AppUtils.buildLogo(100),
+                        k.AppUtils.buildLogo(100),
 
                         ///fields
                         CustomTextField(
@@ -80,7 +82,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                           },
                         ),
                         _isLoading
-                            ? AppUtils.customProgressIndicator()
+                            ? k.AppUtils.customProgressIndicator()
                             : ElevatedButton(
                                 child: Text(_isLoading == true
                                     ? 'Sending Request...'

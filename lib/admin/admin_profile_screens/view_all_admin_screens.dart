@@ -1,6 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_market_app/constants/constants.dart';
-import 'package:e_market_app/constants/db_collections.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as cloud_firestore;
+import 'package:e_market_app/constants/constants.dart' as k;
+import 'package:e_market_app/constants/db_collections.dart' as collections;
 import 'package:flutter/material.dart';
 
 class ViewAllAdminScreen extends StatelessWidget {
@@ -12,19 +12,20 @@ class ViewAllAdminScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('View All Admins'),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection(DatabaseCollection.adminsCollection)
+      body: StreamBuilder<cloud_firestore.QuerySnapshot>(
+        stream: cloud_firestore.FirebaseFirestore.instance
+            .collection(collections.DatabaseCollection.adminsCollection)
             .where('userType', isEqualTo: 'admin')
             .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        builder: (BuildContext context,
+            AsyncSnapshot<cloud_firestore.QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
             // Loading indicator
-            return Center(child: AppUtils.customProgressIndicator());
+            return Center(child: k.AppUtils.customProgressIndicator());
           }
 
           // If there is no data, display a message
@@ -35,8 +36,8 @@ class ViewAllAdminScreen extends StatelessWidget {
           }
 
           // If there is data, build a list of cards
-          final List<Widget> adminWidgets =
-              snapshot.data!.docs.map((DocumentSnapshot document) {
+          final List<Widget> adminWidgets = snapshot.data!.docs
+              .map((cloud_firestore.DocumentSnapshot document) {
             // Access the data in each document
             Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 

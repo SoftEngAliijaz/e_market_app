@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_market_app/constants/constants.dart';
-import 'package:e_market_app/constants/db_collections.dart';
-import 'package:e_market_app/models/product_model/product_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as cloud_firestore;
+import 'package:e_market_app/constants/constants.dart' as k;
+import 'package:e_market_app/constants/db_collections.dart' as collections;
+import 'package:e_market_app/models/product_model/product_model.dart' as model;
 import 'package:flutter/material.dart';
 
 class ViewProductScreen extends StatelessWidget {
@@ -14,10 +14,11 @@ class ViewProductScreen extends StatelessWidget {
         title: const Text('View Products'),
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection(DatabaseCollection.productCollection)
+        stream: cloud_firestore.FirebaseFirestore.instance
+            .collection(collections.DatabaseCollection.productCollection)
             .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        builder: (BuildContext context,
+            AsyncSnapshot<cloud_firestore.QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.active ||
               snapshot.hasData) {
             if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
@@ -30,7 +31,7 @@ class ViewProductScreen extends StatelessWidget {
 
                   return _productCard(
                     context,
-                    ProductModel.fromJson(
+                    model.ProductModel.fromJson(
                       productData.data() as Map<String, dynamic>,
                     ),
                   );
@@ -41,7 +42,7 @@ class ViewProductScreen extends StatelessWidget {
               );
             }
           } else {
-            return Center(child: AppUtils.customProgressIndicator());
+            return Center(child: k.AppUtils.customProgressIndicator());
           }
         },
       ),
@@ -50,7 +51,7 @@ class ViewProductScreen extends StatelessWidget {
 
   Widget _productCard(
     BuildContext context,
-    ProductModel product,
+    model.ProductModel product,
   ) {
     final Size size = MediaQuery.of(context).size;
     return Card(

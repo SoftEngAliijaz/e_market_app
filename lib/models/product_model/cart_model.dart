@@ -8,6 +8,7 @@ class CartModel {
   int? quantity;
   int? price;
   String? image;
+
   CartModel({
     @required this.id,
     @required this.image,
@@ -17,7 +18,7 @@ class CartModel {
   });
 
   static Future<void> addtoCart(CartModel cart) async {
-    CollectionReference db = FirebaseFirestore.instance
+    CollectionReference collectionReference = FirebaseFirestore.instance
         .collection(DatabaseCollection.cartCollection);
     Map<String, dynamic> data = {
       "id": cart.id,
@@ -26,6 +27,6 @@ class CartModel {
       "quantity": cart.quantity,
       "price": cart.price,
     };
-    await db.add(data);
+    await collectionReference.add(data);
   }
 }

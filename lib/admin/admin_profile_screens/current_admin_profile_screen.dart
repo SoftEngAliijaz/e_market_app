@@ -1,11 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_market_app/constants/constants.dart';
-import 'package:e_market_app/constants/db_collections.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as cloud_firestore;
+import 'package:e_market_app/constants/constants.dart' as k;
+import 'package:e_market_app/constants/db_collections.dart' as collections;
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart' as image_picker;
 import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart' as path;
 
 class CurrentAdminProfileScreen extends StatefulWidget {
@@ -21,7 +21,7 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
   String? _adminEmail;
   String? _adminPhotoUrl;
 
-  final picker = ImagePicker();
+  final picker = image_picker.ImagePicker();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
 
@@ -33,9 +33,11 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
 
   // Function to fetch admin data from Firestore
   Future<void> fetchAdminData() async {
-    String currentUserUid = FirebaseAuth.instance.currentUser!.uid;
-    DocumentSnapshot snapshot = await FirebaseFirestore.instance
-        .collection(DatabaseCollection.adminsCollection)
+    String currentUserUid =
+        firebase_auth.FirebaseAuth.instance.currentUser!.uid;
+    cloud_firestore.DocumentSnapshot snapshot = await cloud_firestore
+        .FirebaseFirestore.instance
+        .collection(collections.DatabaseCollection.adminsCollection)
         .doc(currentUserUid)
         .get();
 
@@ -70,18 +72,22 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
       // Upload new profile picture if provided
       if (newPhoto != null) {
         String fileName = path.basename(newPhoto.path);
-        Reference firebaseStorageRef =
-            FirebaseStorage.instance.ref().child('profile_pics/$fileName');
-        UploadTask uploadTask = firebaseStorageRef.putFile(newPhoto);
-        TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
+        firebase_storage.Reference firebaseStorageRef = firebase_storage
+            .FirebaseStorage.instance
+            .ref()
+            .child('profile_pics/$fileName');
+        firebase_storage.UploadTask uploadTask =
+            firebaseStorageRef.putFile(newPhoto);
+        firebase_storage.TaskSnapshot taskSnapshot =
+            await uploadTask.whenComplete(() {});
         String photoUrl = await taskSnapshot.ref.getDownloadURL();
         updateData['photoUrl'] = photoUrl;
         _adminPhotoUrl = photoUrl;
       }
 
       // Update Firestore document with the new data
-      await FirebaseFirestore.instance
-          .collection(DatabaseCollection.adminsCollection)
+      await cloud_firestore.FirebaseFirestore.instance
+          .collection(collections.DatabaseCollection.adminsCollection)
           .doc(currentUserUid)
           .update(updateData);
 
@@ -110,7 +116,8 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
 
   // Function to pick an image from gallery
   Future<void> _pickImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final pickedFile =
+        await picker.pickImage(source: image_picker.ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _imageFile = File(pickedFile.path);
@@ -135,7 +142,7 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
             shape: StadiumBorder(),
             onPressed: () {
               updateAdminProfile(
-                  context, FirebaseAuth.instance.currentUser!.uid,
+                  context, firebase_auth.FirebaseAuth.instance.currentUser!.uid,
                   newPhoto: _imageFile);
             },
             child: Center(
@@ -165,12 +172,12 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
                         ? NetworkImage(_adminPhotoUrl!)
                         : null,
                     child: _adminPhotoUrl!.isEmpty
-                        ? Image.network(AppUtils.noProfileImage)
+                        ? Image.network(k.AppUtils.noProfileImage)
                         : null),
               ),
 
               ///
-              sizedbox(),
+              k.sizedbox(),
 
               // Text fields for name and email
               TextFormField(
@@ -181,7 +188,7 @@ class _CurrentAdminProfileScreenState extends State<CurrentAdminProfileScreen> {
               ),
 
               ///
-              sizedbox(),
+              k.sizedbox(),
 
               TextFormField(
                 controller: _emailController,

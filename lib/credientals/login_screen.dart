@@ -1,16 +1,12 @@
-// ignore_for_file: use_build_context_synchronously
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_market_app/admin/dashboard/admin_dashboard_screen.dart';
-import 'package:e_market_app/constants/constants.dart';
 import 'package:e_market_app/credientals/signup_screen.dart';
-import 'package:e_market_app/models/user_model/user_model.dart';
 import 'package:e_market_app/user_side/home/home_screen.dart';
 import 'package:e_market_app/widgets/account_selection.dart';
 import 'package:e_market_app/widgets/custom_text_field.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fluttertoast/fluttertoast.dart' as toast;
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:e_market_app/constants/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({Key? key}) : super(key: key);
@@ -20,193 +16,105 @@ class LogInScreen extends StatefulWidget {
 }
 
 class _LogInScreenState extends State<LogInScreen> {
-  final TextEditingController _emailC = TextEditingController();
-  final TextEditingController _passwordC = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isObscureText = true;
   bool _isLoading = false;
-  String _selectedUserType = 'user'; // Add this variable to track user type
-
-  // Log-in method
-  Future<void> _loginCredentials() async {
-    if (_formKey.currentState!.validate()) {
-      try {
-        setState(() {
-          _isLoading = true;
-        });
-
-        UserCredential userCredential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(
-                email: _emailC.text, password: _passwordC.text);
-
-        if (userCredential.user != null) {
-          DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
-              .collection(_selectedUserType == 'admin' ? 'admins' : 'users')
-              .doc(userCredential.user!.uid)
-              .get();
-
-          if (userSnapshot.exists) {
-            UserModel userModel = UserModel.fromMap(
-              userSnapshot.data() as Map<String, dynamic>,
-            );
-
-            if (userModel.isAdmin! || _selectedUserType == 'admin') {
-              /// Navigate to admin dashboard
-              Navigator.push(context, MaterialPageRoute(builder: (_) {
-                return AdminDashBoard();
-              }));
-            } else {
-              /// Navigate to home screen
-              Navigator.push(context, MaterialPageRoute(builder: (_) {
-                return HomeScreen();
-              }));
-            }
-          } else {
-            Fluttertoast.showToast(msg: 'User data does not exist');
-          }
-        }
-      } on FirebaseAuthException catch (e) {
-        String errorMessage = e.message ?? 'An error occurred';
-        // Handle specific login errors
-        if (e.code == 'user-not-found') {
-          errorMessage = 'No user found for that email';
-        } else if (e.code == 'wrong-password') {
-          errorMessage = 'Wrong password provided';
-        } else {
-          Fluttertoast.showToast(msg: errorMessage);
-        }
-        Fluttertoast.showToast(msg: errorMessage);
-      } catch (e) {
-        Fluttertoast.showToast(msg: e.toString());
-      }
-    }
-  }
-
-  // Radio button group for user type selection
-  Widget _buildUserTypeSelection() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Radio(
-          value: 'user',
-          groupValue: _selectedUserType,
-          onChanged: (value) {
-            setState(() {
-              _selectedUserType = value.toString();
-            });
-          },
-        ),
-        const Text('User'),
-        Radio(
-          value: 'admin',
-          groupValue: _selectedUserType,
-          onChanged: (value) {
-            setState(() {
-              _selectedUserType = value.toString();
-            });
-          },
-        ),
-        const Text('Admin'),
-      ],
-    );
-  }
+  bool _rememberMe = false;
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: SafeArea(
-        child: SizedBox(
-          height: double.infinity,
-          width: double.infinity,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Form(
-                    key: _formKey,
-                    child: Container(
-                      height: size.height,
-                      width: size.width,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          const Text(
-                            'Welcome to\nE-Market App',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 25.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          AppUtils.buildLogo(100),
-                          CustomTextField(
-                            textEditingController: _emailC,
-                            hintText: 'Enter Email',
-                            prefixIcon: Icons.email_outlined,
-                            keyboardType: TextInputType.emailAddress,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Email should not be empty';
-                              } else if (!_regExp().hasMatch(value)) {
-                                return 'Enter a valid email address';
-                              }
-                              return null;
-                            },
-                          ),
-                          CustomTextField(
-                            textEditingController: _passwordC,
-                            hintText: 'Enter Password',
-                            prefixIcon: Icons.password_outlined,
-                            obscureText: _isObscureText,
-                            suffixWidget: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _isObscureText = !_isObscureText;
-                                });
-                              },
-                              icon: Icon(
-                                _isObscureText
-                                    ? Icons.visibility_outlined
-                                    : Icons.visibility_off_outlined,
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Password should not be empty';
-                              } else if (value.length < 6) {
-                                return 'Password must be at least 6 characters';
-                              }
-                              return null;
-                            },
-                          ),
-                          AccountSelection(
-                            title: 'Do not have account?',
-                            buttonTitle: 'SIGNUP',
-                            onPressed: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (_) {
-                                return SignUpScreen();
-                              }));
-                            },
-                          ),
-                          _buildUserTypeSelection(),
-                          ElevatedButton(
-                            onPressed: _isLoading
-                                ? null
-                                : () {
-                                    _loginCredentials();
-                                  },
-                            child: const Text('LOGIN'),
-                          ),
-                        ],
-                      ),
+      body: Container(
+        child: Form(
+          key: _formKey,
+          child: Card(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AppUtils.buildLogo(100),
+                sizedbox(),
+                CustomTextField(
+                  textEditingController: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  hintText: 'Email',
+                  prefixIcon: Icons.email_outlined,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    return null;
+                  },
+                ),
+                sizedbox(),
+
+                CustomTextField(
+                  textEditingController: _passwordController,
+                  obscureText: _isObscureText,
+                  hintText: 'Password',
+                  prefixIcon: Icons.lock_outline,
+                  suffixWidget: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _isObscureText = !_isObscureText;
+                      });
+                    },
+                    icon: Icon(
+                      _isObscureText
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined,
                     ),
                   ),
-                ],
-              ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your password';
+                    }
+                    return null;
+                  },
+                ),
+                sizedbox(),
+
+                Row(
+                  children: [
+                    Checkbox(
+                      value: _rememberMe,
+                      onChanged: (value) {
+                        setState(() {
+                          _rememberMe = value!;
+                        });
+                      },
+                    ),
+                    Text('Remember Me'),
+                  ],
+                ),
+
+                ///login button
+                ElevatedButton(
+                  onPressed: _isLoading ? null : _login,
+                  child:
+                      _isLoading ? CircularProgressIndicator() : Text('Login'),
+                ),
+
+                ///_forgotPassword
+                TextButton(
+                  onPressed: _forgotPassword,
+                  child: Text('Forgot Password?'),
+                ),
+
+                sizedbox(),
+
+                ///AccountSelection
+                AccountSelection(
+                  title: 'Don\'t have Account',
+                  buttonTitle: 'SignUp',
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) {
+                      return SignUpScreen();
+                    }));
+                  },
+                ),
+              ],
             ),
           ),
         ),
@@ -214,9 +122,79 @@ class _LogInScreenState extends State<LogInScreen> {
     );
   }
 
-  RegExp _regExp() {
-    return RegExp(
-      r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$',
+// login method
+  void _login() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      try {
+        await firebase_auth.FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
+
+        if (_rememberMe) {
+          // Saved email to local storage
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString('userEmail', _emailController.text);
+        }
+
+        // Navigate to home screen
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (_) => HomeScreen()));
+      } catch (error) {
+        toast.Fluttertoast.showToast(msg: error.toString());
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  void _forgotPassword() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Forgot Password'),
+          content: TextFormField(
+            decoration: InputDecoration(labelText: 'Enter your email'),
+            keyboardType: TextInputType.emailAddress,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your email';
+              }
+              return null;
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                String email = _emailController.text;
+                try {
+                  await firebase_auth.FirebaseAuth.instance
+                      .sendPasswordResetEmail(email: email);
+                  toast.Fluttertoast.showToast(
+                      msg: 'Password reset email sent to $email');
+                } catch (error) {
+                  toast.Fluttertoast.showToast(msg: error.toString());
+                }
+                Navigator.of(context).pop();
+              },
+              child: Text('Reset Password'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
