@@ -12,6 +12,7 @@ class AdminDashBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authID = FirebaseAuth.instance.currentUser!.uid;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
@@ -24,7 +25,7 @@ class AdminDashBoard extends StatelessWidget {
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection(DatabaseCollection.adminsCollection)
-            .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .where('uid', isEqualTo: authID)
             .where('userType', isEqualTo: 'admin')
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {

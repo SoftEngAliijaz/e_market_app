@@ -2,9 +2,9 @@ import 'package:e_market_app/credientals/signup_screen.dart';
 import 'package:e_market_app/user_side/home/home_screen.dart';
 import 'package:e_market_app/widgets/account_selection.dart';
 import 'package:e_market_app/widgets/custom_text_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart' as toast;
-import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:e_market_app/constants/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -98,9 +98,8 @@ class _LogInScreenState extends State<LogInScreen> {
 
                 ///_forgotPassword
                 TextButton(
-                  onPressed: _forgotPassword,
-                  child: Text('Forgot Password?'),
-                ),
+                    onPressed: _forgotPassword,
+                    child: Text('Forgot Password?')),
 
                 sizedbox(),
 
@@ -122,7 +121,7 @@ class _LogInScreenState extends State<LogInScreen> {
     );
   }
 
-// login method
+  /// login method
   void _login() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -130,7 +129,7 @@ class _LogInScreenState extends State<LogInScreen> {
       });
 
       try {
-        await firebase_auth.FirebaseAuth.instance.signInWithEmailAndPassword(
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text,
           password: _passwordController.text,
         );
@@ -145,7 +144,7 @@ class _LogInScreenState extends State<LogInScreen> {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (_) => HomeScreen()));
       } catch (error) {
-        toast.Fluttertoast.showToast(msg: error.toString());
+        Fluttertoast.showToast(msg: error.toString());
       } finally {
         setState(() {
           _isLoading = false;
@@ -166,6 +165,8 @@ class _LogInScreenState extends State<LogInScreen> {
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your email';
+              } else if (!value.contains("@gmail.com")) {
+                return 'Please enter valid gmail';
               }
               return null;
             },
@@ -181,12 +182,12 @@ class _LogInScreenState extends State<LogInScreen> {
               onPressed: () async {
                 String email = _emailController.text;
                 try {
-                  await firebase_auth.FirebaseAuth.instance
+                  await FirebaseAuth.instance
                       .sendPasswordResetEmail(email: email);
-                  toast.Fluttertoast.showToast(
+                  Fluttertoast.showToast(
                       msg: 'Password reset email sent to $email');
                 } catch (error) {
-                  toast.Fluttertoast.showToast(msg: error.toString());
+                  Fluttertoast.showToast(msg: error.toString());
                 }
                 Navigator.of(context).pop();
               },
