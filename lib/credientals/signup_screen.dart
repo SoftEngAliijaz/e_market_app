@@ -29,7 +29,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _isObscureRePassword = true;
   bool _isObscureAdminCode = true;
   bool _isLoading = false;
-  String? _selectedUserType;
+ final String? _selectedUserType;
   File? _image;
 
   _signUpCredentials() async {
